@@ -1,0 +1,247 @@
+/* 全局样式 */
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  display: flex;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.menu-icon {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  cursor: pointer;
+}
+
+.content-container {
+  display: flex;
+  flex-grow: 1;
+  margin-top: 16px;
+}
+
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  transition: width 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.2s ease;
+  z-index: 20;
+  opacity: 0;
+}
+
+.sidebar.open {
+  width: 250px;
+  opacity: 1;
+  transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease;
+}
+
+.memo-item {
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 16px;
+}
+
+.editor-container {
+  flex-grow: 1;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 16px;
+  margin-right: 16px;
+}
+
+.editor-textarea {
+  width: 100%;
+  height: 50%;
+  padding: 16px;
+  resize: none;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  font-family: sans-serif;
+}
+
+.editor-preview {
+  padding: 16px;
+  overflow-y: auto;
+  height: 50%;
+}
+
+.toolbar {
+  padding: 16px;
+  border-radius: 8px 8px 0px 0px;
+  margin-right: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toolbar-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.toolbar-btn {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+}
+
+.save-btn {
+  padding: 10px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: none;
+  font-size: 16px;
+}
+
+.save-icon {
+  margin-right: 8px;
+}
+
+.app-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  text-align: center;
+}
+
+.app-title .edit-icon {
+  position: absolute;
+  left: -20px;
+  bottom: 0;
+  font-size: 14px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.app-title:hover .edit-icon {
+  opacity: 1;
+}
+
+.app-title-input {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  font-family: sans-serif;
+  margin: 0;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  margin: -1px;
+  border: none;
+  background: transparent;
+  width: 100%;
+  outline: none;
+}
+
+.sidebar-content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 16px);
+  position: relative;
+}
+
+.memo-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-bottom: 60px; /* 为新建备忘录按钮腾出空间 */
+}
+
+.new-memo-btn {
+  position: absolute;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  padding: 10px;
+  background-color: transparent;
+  color: inherit;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-align: left;
+}
+
+.new-memo-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.active {
+  font-weight: bold;
+}
+
+.sidebar {
+  transition: width 0.3s ease, opacity 0.3s ease;
+}
+
+.sidebar.open {
+  transition: width 0.3s ease, opacity 0.3s ease;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+}
+
+.theme-toggle-container {
+  display: flex;
+  margin-right: 10px;
+}
+
+.theme-toggle-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+  opacity: 0.8;
+}
