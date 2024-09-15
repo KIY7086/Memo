@@ -1,0 +1,67 @@
+body {
+    background-color: #2a2a27;
+    color: #e0e0e0;
+  }
+  
+  .app-header {
+    background-color: #3a3a37;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .sidebar {
+    background-color: #3a3a37;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .memo-item {
+    background-color: #2a2a27;
+    color: #e0e0e0;
+  }
+  
+  .memo-item:hover {
+    background-color: #3a3a37;
+  }
+  
+  .editor-textarea, .editor-preview {
+    background-color: #2f2f2b;
+    color: #e0e0e0;
+  }
+  
+  .toolbar {
+    background-color: #3a3a37;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .toolbar-btn {
+    background: #2a2a27;
+    color: #e0e0e0;
+  }
+  
+  .toolbar-btn:hover {
+    background-color: #3a3a37;
+  }
+  
+  .save-btn {
+    background-color: #ae5630;
+    color: #e0e0e0;
+  }
+  
+  .save-btn:hover {
+    background-color: #e0a800;
+  }
+
+  .new-memo-button {
+    color: #ae5630;
+  }
+
+  .new-memo-button:hover {
+    color: #e0a800;
+  }
+
+  .app-title-input {
+    color: #e0e0e0;
+  }
+
+  .theme-toggle-btn {
+    color: #e0e0e0;
+  }
