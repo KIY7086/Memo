@@ -23,11 +23,7 @@ git clone https://github.com/KIY7086/Memo.git && cd Memo
 ```
 npm install
 ```
-使用Vite调试项目
+使用Vite启动项目
 ```
 npm run dev
-```
-使用Vite构建网页文件
-```
-npm run build
 ```

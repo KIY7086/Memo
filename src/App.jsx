@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faBold, faItalic, faList, faImage, faSave, faBars, 
-  faPlus, faPencil, faSun, faMoon, faAdjust 
+  faPlus, faPencil, faSun, faMoon, faCog, faFileImport, faFileExport, faAdjust
 } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import './style.css';
@@ -13,52 +13,38 @@ const MemoApp = () => {
   const [currentMemo, setCurrentMemo] = useState({ id: null, title: '', content: '' });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'auto');
+
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
   const titleInputRef = useRef(null);
   const sidebarRef = useRef(null);
-
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('theme') || 'light';
-  });
-
-  useEffect(() => {
-    // 保存主题到 localStorage
-    localStorage.setItem('theme', theme);
     
-    // 动态加载主题 CSS
-    const link = document.createElement('link');
-    link.href = `/themes/${theme}.css`;
-    link.rel = 'stylesheet';
-    document.head.appendChild(link);
+  const applyTheme = useCallback((selectedTheme) => {
+    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const themeToApply = selectedTheme === 'auto' ? (prefersDarkMode ? 'dark' : 'light') : selectedTheme;
+    document.documentElement.setAttribute('data-theme', themeToApply);
+  }, []);
 
-    return () => {
-      document.head.removeChild(link);
-    };
-  }, [theme]);
-
-  const handleThemeChange = () => {
-    setTheme(prevTheme => {
-      const newTheme = prevTheme === 'light' ? 'dark' : 'light';
-      // 刷新页面以应用新主题
-      window.location.reload();
-      return newTheme;
-    });
-  };
-
-  // 从 localStorage 中加载备忘录和上一次编辑的备忘录
   useEffect(() => {
-    const savedMemos = JSON.parse(localStorage.getItem('memos'));
+    applyTheme(theme);
+    localStorage.setItem('theme', theme);
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleChange = () => theme === 'auto' && applyTheme('auto');
+    mediaQuery.addListener(handleChange);
+
+    return () => mediaQuery.removeListener(handleChange);
+  }, [theme, applyTheme]);
+
+  useEffect(() => {
+    const savedMemos = JSON.parse(localStorage.getItem('memos') || '[]');
     const savedCurrentMemoId = localStorage.getItem('currentMemoId');
 
-    if (savedMemos && savedMemos.length > 0) {
+    if (savedMemos.length > 0) {
       setMemos(savedMemos);
-      const lastMemo = savedMemos.find((memo) => memo.id === parseInt(savedCurrentMemoId));
-      if (lastMemo) {
-        setCurrentMemo(lastMemo);
-      } else {
-        setCurrentMemo(savedMemos[0]);
-      }
+      const lastMemo = savedMemos.find((memo) => memo.id === parseInt(savedCurrentMemoId)) || savedMemos[0];
+      setCurrentMemo(lastMemo);
     } else {
       const initialMemo = { id: Date.now(), title: '新建备忘录', content: '这是一个新的备忘录' };
       setMemos([initialMemo]);
@@ -79,7 +65,6 @@ const MemoApp = () => {
     return () => document.removeEventListener('click', handleClickOutside);
   }, [isEditingTitle]);
 
-  // 设置不同模式下的 Toast 样式
   const showToast = (message, type = 'info') => {
     const toastBackgroundColor = theme === 'dark' ? '#3a3a37' : '#e6e4dd';
     
@@ -104,27 +89,20 @@ const MemoApp = () => {
     const end = textarea.selectionEnd;
     const selectedText = currentMemo.content.substring(start, end);
   
+    if (!selectedText && action !== 'image') {
+      showToast('请先选择文本', 'warning');
+      return;
+    }
+  
     let newText = '';
     switch (action) {
       case 'bold':
-        if (!selectedText) {
-          showToast('你没有选择任何文本', 'warning');
-          return;
-        }
         newText = `**${selectedText}**`;
         break;
       case 'italic':
-        if (!selectedText) {
-          showToast('你没有选择任何文本', 'warning');
-          return;
-        }
         newText = `*${selectedText}*`;
         break;
       case 'list':
-        if (!selectedText) {
-          showToast('你没有选择任何文本', 'warning');
-          return;
-        }
         newText = `\n- ${selectedText}`;
         break;
       case 'image':
@@ -163,15 +141,15 @@ const MemoApp = () => {
     }
   };
 
-  const handleSave = (memoToSave = currentMemo) => {
+  const handleSave = useCallback((memoToSave = currentMemo) => {
     const updatedMemos = memos.map((memo) =>
       memo.id === memoToSave.id ? memoToSave : memo
     );
     setMemos(updatedMemos);
     localStorage.setItem('memos', JSON.stringify(updatedMemos));
-    localStorage.setItem('currentMemoId', memoToSave.id); // 保存当前 memo 的 id
+    localStorage.setItem('currentMemoId', memoToSave.id.toString());
     showToast('保存成功', 'success');
-  };
+  }, [memos, currentMemo]);
 
   const handleNewMemo = () => {
     const newMemo = {
@@ -183,7 +161,7 @@ const MemoApp = () => {
     setMemos(updatedMemos);
     setCurrentMemo(newMemo);
     localStorage.setItem('memos', JSON.stringify(updatedMemos));
-    localStorage.setItem('currentMemoId', newMemo.id); // 保存当前 memo 的 id
+    localStorage.setItem('currentMemoId', newMemo.id.toString());
     showToast('新建备忘录成功', 'success');
   };
 
@@ -201,6 +179,60 @@ const MemoApp = () => {
       setIsEditingTitle(false);
       handleSave();
     }
+  };
+
+  const handleThemeChange = () => {
+    setTheme(prevTheme => {
+      switch (prevTheme) {
+        case 'light': return 'dark';
+        case 'dark': return 'auto';
+        case 'auto': return 'light';
+        default: return 'light';
+      }
+    });
+  };
+
+  const getThemeIcon = () => {
+    switch (theme) {
+      case 'light': return faSun;
+      case 'dark': return faMoon;
+      case 'auto': return faAdjust;
+      default: return faSun;
+    }
+  };
+
+  const handleImport = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const importedData = JSON.parse(e.target.result);
+          setMemos(importedData.memos);
+          setCurrentMemo(importedData.memos[0]);
+          localStorage.setItem('memos', JSON.stringify(importedData.memos));
+          localStorage.setItem('currentMemoId', importedData.memos[0].id.toString());
+          showToast('备忘录导入成功', 'success');
+        } catch (error) {
+          showToast('导入失败，请确保文件格式正确', 'error');
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  const handleExport = () => {
+    const exportData = { memos, currentMemoId: currentMemo.id };
+    const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'memos_export.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('备忘录导出成功', 'success');
   };
 
   const ToolbarButton = ({ icon, action }) => (
@@ -222,6 +254,7 @@ const MemoApp = () => {
             onKeyDown={handleTitleKeyDown}
             onBlur={() => {
               setIsEditingTitle(false);
+              handleSave();
             }}
           />
         ) : (
@@ -233,13 +266,15 @@ const MemoApp = () => {
         <div className="menu-icon" onMouseEnter={() => setIsMenuOpen(true)}>
           <FontAwesomeIcon icon={faBars} size="lg" />
         </div>
-        <button
-          onClick={handleThemeChange}
-          className="theme-toggle-btn"
-          aria-label="切换主题"
-        >
-          <FontAwesomeIcon icon={theme === 'light' ? faMoon : faSun} />
-        </button>
+        <div className="app-header-tools">
+          <button
+            onClick={handleThemeChange}
+            className="theme-toggle-btn"
+            aria-label="切换主题"
+          >
+            <FontAwesomeIcon icon={getThemeIcon()} />
+          </button>
+        </div>
       </div>
 
       <div className="content-container">
@@ -255,8 +290,8 @@ const MemoApp = () => {
                   key={memo.id}
                   className={`memo-item ${memo.id === currentMemo.id ? 'active' : ''}`}
                   onClick={() => {
-                    setCurrentMemo(memo); // 切换到点击的 memo
-                    localStorage.setItem('currentMemoId', memo.id); // 更新当前 memo 的 id
+                    setCurrentMemo(memo);
+                    localStorage.setItem('currentMemoId', memo.id.toString());
                     setIsMenuOpen(false);
                   }}
                 >
@@ -298,10 +333,7 @@ const MemoApp = () => {
                 onChange={handleFileUpload}
               />
             </div>
-            <button
-              className="save-btn"
-              onClick={() => handleSave()}
-            >
+            <button className="save-btn" onClick={() => handleSave()}>
               <FontAwesomeIcon icon={faSave} /> &nbsp;保存
             </button>
           </div>
