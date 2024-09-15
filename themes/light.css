@@ -1,0 +1,47 @@
+body {
+    background-color: #f2f0e9;
+    color: #000000;
+  }
+  
+  .app-header {
+    background-color: #e6e4dd;
+  }
+  
+  .sidebar {
+    background-color: rgba(230, 228, 221, 0.6);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .memo-item {
+    background-color: #f2f0e9;
+  }
+  
+  .memo-item:hover {
+    background-color: #d8d6cf;
+  }
+  
+  .editor-textarea, .editor-preview {
+    background-color: #ffffff;
+    color: #000000;
+  }
+  
+  .toolbar {
+    background-color: #e6e4dd;
+  }
+  
+  .toolbar-btn {
+    background: #f2f0e9;
+  }
+  
+  .toolbar-btn:hover {
+    background-color: #d8d6cf;
+  }
+  
+  .save-btn {
+    background-color: #ba5b38;
+    color: white;
+  }
+  
+  .save-btn:hover {
+    background-color: #e0a800;
+  }
