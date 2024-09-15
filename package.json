@@ -6,14 +6,13 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^6.6.0",
         "@fortawesome/free-solid-svg-icons": "^6.6.0",
         "@fortawesome/react-fontawesome": "^0.2.2",
         "@sweetalert2/theme-dark": "^5.0.18",
-        "lucide-react": "^0.263.1",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-markdown": "^8.0.7",
@@ -23,13 +22,18 @@
         "@types/react": "^18.2.15",
         "@types/react-dom": "^18.2.7",
         "@vitejs/plugin-react": "^4.0.3",
-        "autoprefixer": "^10.4.20",
-        "eslint": "^8.45.0",
-        "eslint-plugin-react": "^7.32.2",
-        "eslint-plugin-react-hooks": "^4.6.0",
-        "eslint-plugin-react-refresh": "^0.4.3",
-        "postcss": "^8.4.45",
-        "tailwindcss": "^3.4.11",
         "vite": "^5.4.5"
-    }
+    },
+    "description": "一个由React.js构建的Web备忘录<br>",
+    "main": "vite.config.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/KIY7086/Memo.git"
+    },
+    "author": "",
+    "license": "GPL-3.0",
+    "bugs": {
+        "url": "https://github.com/KIY7086/Memo/issues"
+    },
+    "homepage": "https://github.com/KIY7086/Memo#readme"
 }

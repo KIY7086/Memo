@@ -1,4 +1,3 @@
-/* 全局样式 */
 body {
   margin: 0;
   font-family: sans-serif;
@@ -59,7 +58,7 @@ body {
   transition: background-color 0.3s ease;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
 }
 
 .main-content {
@@ -186,7 +185,7 @@ body {
 .memo-list {
   flex-grow: 1;
   overflow-y: auto;
-  margin-bottom: 60px; /* 为新建备忘录按钮腾出空间 */
+  margin-bottom: 60px;
 }
 
 .new-memo-btn {
@@ -203,6 +202,9 @@ body {
   cursor: pointer;
   transition: background-color 0.3s ease;
   text-align: left;
+  text-overflow: clip;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .new-memo-btn:hover {
