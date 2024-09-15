@@ -1,7 +1,7 @@
 {
     "name": "memo-app",
     "private": true,
-    "version": "0.1.0",
+    "version": "0.1.1",
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -12,11 +12,10 @@
         "@fortawesome/fontawesome-svg-core": "^6.6.0",
         "@fortawesome/free-solid-svg-icons": "^6.6.0",
         "@fortawesome/react-fontawesome": "^0.2.2",
-        "@sweetalert2/theme-dark": "^5.0.18",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-markdown": "^8.0.7",
-        "sweetalert2": "^11.14.0"
+        "react-toastify": "^10.0.5"
     },
     "devDependencies": {
         "@types/react": "^18.2.15",
@@ -30,7 +29,7 @@
         "type": "git",
         "url": "git+https://github.com/KIY7086/Memo.git"
     },
-    "author": "",
+    "author": "KIY7086",
     "license": "GPL-3.0",
     "bugs": {
         "url": "https://github.com/KIY7086/Memo/issues"
