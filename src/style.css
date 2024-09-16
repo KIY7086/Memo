@@ -6,7 +6,7 @@
   --header-bg: #e6e4dd;
   --title-bg: rgba(255, 255, 255, 0.3);
   --title-border: rgba(255, 255, 255, 0.35);
-  --sidebar-bg: rgba(230, 228, 221, 0.6);
+  --sidebar-bg: rgba(230, 228, 221, 0.4);
   --item-hover-bg: #d8d6cf;
   --editor-bg: #ffffff;
   --toolbar-bg: #e6e4dd;
@@ -28,7 +28,7 @@
   --header-bg: #3a3a37;
   --title-bg: rgba(0, 0, 0, 0.4);
   --title-border: rgba(255, 255, 255, 0.2);
-  --sidebar-bg: #3a3a37;
+  --sidebar-bg: rgba(58, 58, 55, 0.4);
   --item-hover-bg: #3a3a37;
   --editor-bg: #2f2f2b;
   --toolbar-bg: #3a3a37;
