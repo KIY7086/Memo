@@ -34,6 +34,7 @@ const MemoApp = () => {
 
   const textareaRef = useRef(null);
   const fileInputRef = useRef(null);
+  const titleRef = useRef(null);
   const titleInputRef = useRef(null);
   const sidebarRef = useRef(null);
 
@@ -109,7 +110,7 @@ const MemoApp = () => {
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, [isEditingTitle]);
-  
+
   const showToast = (message, type = "info") => {
     toast.dismiss()
 
@@ -315,25 +316,28 @@ const MemoApp = () => {
         pauseOnHover
       />
       <div className="app-header">
-        {isEditingTitle ? (
-          <input
-            ref={titleInputRef}
-            type="text"
-            className="app-title-input"
-            value={currentMemo.title}
-            onChange={handleTitleChange}
-            onKeyDown={handleTitleKeyDown}
-            onBlur={() => {
-              setIsEditingTitle(false);
-              handleSave();
-            }}
-          />
-        ) : (
-          <h1 className="app-title" onClick={handleTitleClick}>
-            {currentMemo.title}
-            <FontAwesomeIcon icon={faPencil} className="edit-icon" />
-          </h1>
-        )}
+        <div className="title-wrapper">
+          <div className="title-background"></div> {/* 背景层 */}
+          {isEditingTitle ? (
+            <input
+              ref={titleInputRef}
+              type="text"
+              className="app-title-input"
+              value={currentMemo.title}
+              onChange={handleTitleChange}
+              onKeyDown={handleTitleKeyDown}
+              onBlur={() => {
+                setIsEditingTitle(false);
+                handleSave();
+              }}
+            />
+          ) : (
+            <h1 className="app-title" onClick={handleTitleClick} ref={titleRef}>
+              {currentMemo.title}
+              <FontAwesomeIcon icon={faPencil} className="edit-icon" />
+            </h1>
+          )}
+          </div>
         <div className="menu-icon" onMouseEnter={() => setIsMenuOpen(true)}>
           <FontAwesomeIcon icon={faBars} size="lg" />
         </div>

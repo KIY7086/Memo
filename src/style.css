@@ -4,6 +4,8 @@
   --primary-color: #ba5b38;
   --primary-color-hover: #e0a800;
   --header-bg: #e6e4dd;
+  --title-bg: rgba(255, 255, 255, 0.3);
+  --title-border: rgba(255, 255, 255, 0.35);
   --sidebar-bg: rgba(230, 228, 221, 0.6);
   --item-hover-bg: #d8d6cf;
   --editor-bg: #ffffff;
@@ -23,6 +25,8 @@
   --primary-color: #ae5630;
   --primary-color-hover: #e0a800;
   --header-bg: #3a3a37;
+  --title-bg: rgba(0, 0, 0, 0.4);
+  --title-border: rgba(255, 255, 255, 0.2);
   --sidebar-bg: #3a3a37;
   --item-hover-bg: #3a3a37;
   --editor-bg: #2f2f2b;
@@ -171,6 +175,33 @@ body {
 .save-icon {
   margin-right: 8px;
 }
+.title-wrapper {
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+}
+
+.title-background {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30vw;
+  height: 100%;
+  background-color: var(--title-bg); /* 透明背景 */
+  border-radius: 12px; /* 圆角 */
+  transform: translate(-50%, -50%) scale(0.8); /* 初始缩小 */
+  opacity: 0; /* 初始透明 */
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* 非线性动画 */
+  padding: 6px 8px;
+  border: 2px solid var(--title-border);
+  z-index: 4; /* 背景在文字后面 */
+}
+
+.title-wrapper:hover .title-background {
+  transform: translate(-50%, -50%) scale(1); /* 放大效果 */
+  opacity: 1; /* 渐变可见 */
+}
 .app-title {
   font-size: 24px;
   font-weight: bold;
@@ -179,6 +210,7 @@ body {
   position: relative;
   display: inline-block;
   text-align: center;
+  z-index: 5;
 }
 .app-title .edit-icon {
   position: absolute;
@@ -187,9 +219,11 @@ body {
   font-size: 14px;
   opacity: 0;
   transition: opacity 0.3s ease;
+  z-index: 5;
 }
-.app-title:hover .edit-icon {
+.title-wrapper:hover .edit-icon {
   opacity: 1;
+  transition: opacity 1s ease;
 }
 .app-title-input {
   text-align: center;
@@ -197,16 +231,18 @@ body {
   font-weight: bold;
   font-family: sans-serif;
   margin: 0;
+  z-index: 4;
   cursor: pointer;
   position: relative;
   display: inline-block;
   margin: -1px;
   border: none;
   background: transparent;
-  width: 100%;
+  width: 30vw;
   outline: none;
   color: var(--text-color);
 }
+
 .sidebar-content {
   padding: 16px;
   display: flex;
