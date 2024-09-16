@@ -112,12 +112,16 @@ const MemoApp = () => {
   }, [isEditingTitle]);
 
   const showToast = (message, type = "info") => {
-    toast.dismiss()
+    toast.dismiss();
 
     const root = document.documentElement;
-    const headerBg = getComputedStyle(root).getPropertyValue("--header-bg").trim();
-    const textColor = getComputedStyle(root).getPropertyValue("--text-color").trim();
-  
+    const headerBg = getComputedStyle(root)
+      .getPropertyValue("--header-bg")
+      .trim();
+    const textColor = getComputedStyle(root)
+      .getPropertyValue("--text-color")
+      .trim();
+
     const toastId = toast[type](message, {
       ...toastOptions,
       style: {
@@ -125,7 +129,7 @@ const MemoApp = () => {
         color: textColor,
       },
     });
-  
+
     return toastId;
   };
 
@@ -337,7 +341,7 @@ const MemoApp = () => {
               <FontAwesomeIcon icon={faPencil} className="edit-icon" />
             </h1>
           )}
-          </div>
+        </div>
         <div className="menu-icon" onMouseEnter={() => setIsMenuOpen(true)}>
           <FontAwesomeIcon icon={faBars} size="lg" />
         </div>
