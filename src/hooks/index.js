@@ -84,6 +84,24 @@ export const useMemoStorage = () => {
   return { memos, setMemos, currentMemo, setCurrentMemo, saveMemo, createNewMemo };
 };
 
+const handleClickOutside = (event) => {
+  if (
+    sidebarRef.current &&
+    !sidebarRef.current.contains(event.target) &&
+    !event.target.closest(".menu-icon")
+  ) {
+    setIsMenuOpen(false);
+  }
+  if (!event.target.closest(".app-title") && isEditingTitle) {
+    setIsEditingTitle(false);
+    handleSave();
+  }
+};
+
+document.addEventListener("click", handleClickOutside);
+return () => document.removeEventListener("click", handleClickOutside);
+}, [isEditingTitle]);
+
 export const showToast = (message, type = "info") => {
   toast.dismiss();
 
