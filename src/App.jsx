@@ -112,16 +112,12 @@ const MemoApp = () => {
   }, [isEditingTitle]);
 
   const showToast = (message, type = "info") => {
-    toast.dismiss();
+    toast.dismiss()
 
     const root = document.documentElement;
-    const headerBg = getComputedStyle(root)
-      .getPropertyValue("--header-bg")
-      .trim();
-    const textColor = getComputedStyle(root)
-      .getPropertyValue("--text-color")
-      .trim();
-
+    const headerBg = getComputedStyle(root).getPropertyValue("--header-bg").trim();
+    const textColor = getComputedStyle(root).getPropertyValue("--text-color").trim();
+  
     const toastId = toast[type](message, {
       ...toastOptions,
       style: {
@@ -129,7 +125,7 @@ const MemoApp = () => {
         color: textColor,
       },
     });
-
+  
     return toastId;
   };
 
@@ -193,6 +189,10 @@ const MemoApp = () => {
 
   const handleSave = useCallback(
     (memoToSave = currentMemo) => {
+      if (!memoToSave.title) {
+        showToast("标题不能为空", "error");
+        return;
+      }
       const updatedMemos = memos.map((memo) =>
         memo.id === memoToSave.id ? memoToSave : memo
       );
@@ -224,7 +224,8 @@ const MemoApp = () => {
   };
 
   const handleTitleChange = (e) => {
-    setCurrentMemo({ ...currentMemo, title: e.target.value });
+    const newTitle = e.target.value.trim();
+    setCurrentMemo({ ...currentMemo, title: newTitle });
   };
 
   const handleTitleKeyDown = (e) => {
@@ -320,6 +321,9 @@ const MemoApp = () => {
         pauseOnHover
       />
       <div className="app-header">
+        <div className="menu-icon" onMouseEnter={() => setIsMenuOpen(true)}>
+          <FontAwesomeIcon icon={faBars} size="lg" />
+        </div>
         <div className="title-wrapper">
           <div className="title-background"></div> {/* 背景层 */}
           {isEditingTitle ? (
@@ -342,18 +346,13 @@ const MemoApp = () => {
             </h1>
           )}
         </div>
-        <div className="menu-icon" onMouseEnter={() => setIsMenuOpen(true)}>
-          <FontAwesomeIcon icon={faBars} size="lg" />
-        </div>
-        <div className="app-header-tools">
-          <button
-            onClick={handleThemeChange}
-            className="theme-toggle-btn"
-            aria-label="切换主题"
-          >
-            <FontAwesomeIcon icon={getThemeIcon()} />
-          </button>
-        </div>
+        <button
+          onClick={handleThemeChange}
+          className="theme-toggle-btn"
+          aria-label="切换主题"
+        >
+          <FontAwesomeIcon icon={getThemeIcon()} />
+        </button>
       </div>
 
       <div className="content-container">
