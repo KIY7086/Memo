@@ -12,14 +12,12 @@ import {
   faPencil,
   faSun,
   faMoon,
-  faCog,
-  faFileImport,
-  faFileExport,
   faAdjust,
 } from "@fortawesome/free-solid-svg-icons";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./style.css";
+import "./toast.css";
 
 const MemoApp = () => {
   const [memos, setMemos] = useState([]);
@@ -38,6 +36,17 @@ const MemoApp = () => {
   const fileInputRef = useRef(null);
   const titleInputRef = useRef(null);
   const sidebarRef = useRef(null);
+
+  const toastOptions = {
+    position: "top-right",
+    autoClose: 1,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    closeButton: false,
+    className: "Toastify__toast--animate",
+  };
 
   const applyTheme = useCallback((selectedTheme) => {
     const prefersDarkMode = window.matchMedia(
@@ -100,44 +109,23 @@ const MemoApp = () => {
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, [isEditingTitle]);
-
+  
   const showToast = (message, type = "info") => {
-    toast.dismiss();
+    toast.dismiss()
 
     const root = document.documentElement;
-    const headerBg = getComputedStyle(root)
-      .getPropertyValue("--header-bg")
-      .trim();
-
-    const toastOptions = {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      closeButton: false,
+    const headerBg = getComputedStyle(root).getPropertyValue("--header-bg").trim();
+    const textColor = getComputedStyle(root).getPropertyValue("--text-color").trim();
+  
+    const toastId = toast[type](message, {
+      ...toastOptions,
       style: {
         backgroundColor: headerBg,
-        color: getComputedStyle(root).getPropertyValue("--text-color").trim(),
+        color: textColor,
       },
-      className: "Toastify__toast--animate",
-    };
-
-    switch (type) {
-      case "success":
-        toast.success(message, toastOptions);
-        break;
-      case "error":
-        toast.error(message, toastOptions);
-        break;
-      case "warning":
-        toast.warn(message, toastOptions);
-        break;
-      default:
-        toast.info(message, toastOptions);
-        break;
-    }
+    });
+  
+    return toastId;
   };
 
   const handleToolbarClick = (action) => {
@@ -318,10 +306,10 @@ const MemoApp = () => {
     <div className="app-container">
       <ToastContainer
         position="top-right"
-        autoClose={3000}
         hideProgressBar={true}
-        newestOnTop={true}
+        autoClose={1}
         closeOnClick
+        rtl={false}
         pauseOnFocusLoss={false}
         draggable={false}
         pauseOnHover
