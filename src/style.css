@@ -12,12 +12,13 @@
   --toolbar-bg: #e6e4dd;
   --toolbar-btn-bg: #f2f0e9;
   --toolbar-btn-hover-bg: #d8d6cf;
-  --toast-bg: rgba(255, 255, 255, 0.2);
+  --toast-bg: rgba(255, 255, 255, 0.3);
   --toast-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
   --toast-text: var(--text-color);
   --toast-blur: 10px;
   --toast-border-radius: 10px;
   --toast-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [data-theme="dark"] {
@@ -30,19 +31,51 @@
   --title-border: rgba(255, 255, 255, 0.2);
   --sidebar-bg: rgba(58, 58, 55, 0.4);
   --item-hover-bg: #3a3a37;
-  --editor-bg: #2f2f2b;
+  --editor-bg: #101010;
   --toolbar-bg: #3a3a37;
   --toolbar-btn-bg: #2a2a27;
   --toolbar-btn-hover-bg: #3a3a37;
-  --toast-bg: rgba(0, 0, 0, 0.6);
+  --toast-bg: rgba(0, 0, 0, 0.5);
   --toast-text: #e0e0e0;
 }
 
-body {
+* {
   margin: 0;
-  font-family: sans-serif;
+  padding: 0;
+  box-sizing: border-box;
+  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
   background-color: var(--bg-color);
   color: var(--text-color);
+  transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.save-btn {
+  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.3s ease;
+}
+
+.save-btn:hover {
+  transform: scale(1.05);
+}
+
+.memo-item:hover {
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toolbar-btn {
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.title-background {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .app-container {
@@ -275,19 +308,18 @@ body {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  height: calc(100% - 16px);
+  height: 100%;
   position: relative;
 }
 
 .memo-list {
-  flex-grow: 1;
+  height: 100%;
   overflow-y: auto;
-  margin-bottom: 60px;
+  margin-bottom: 20px;
 }
 
 .new-memo-btn {
   border-radius: 4px;
-  margin-bottom: 22px;
   padding: 10px;
   background-color: transparent;
   color: var(--primary-color);
