@@ -8,9 +8,10 @@ import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import Editor from "./components/Editor";
 import Toolbar from "./components/Toolbar";
-import { useTheme, useMemoStorage, showToast } from "./hooks";
+import { useTheme, useMemoStorage, showToast, useConfigureToast } from "./hooks";
 
 const MemoApp = () => {
+  useConfigureToast();
   const { theme, handleThemeChange, getThemeIcon } = useTheme();
   const { memos, setMemos, currentMemo, setCurrentMemo, saveMemo, createNewMemo } = useMemoStorage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);

@@ -12,7 +12,7 @@
   --toolbar-bg: #e6e4dd;
   --toolbar-btn-bg: #f2f0e9;
   --toolbar-btn-hover-bg: #d8d6cf;
-  --toast-bg: rgba(255, 255, 255, 0.2);
+  --toast-bg: var(--sidebar-bg);
   --toast-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
   --toast-text: var(--text-color);
   --toast-blur: 10px;
@@ -34,7 +34,7 @@
   --toolbar-bg: #3a3a37;
   --toolbar-btn-bg: #2a2a27;
   --toolbar-btn-hover-bg: #3a3a37;
-  --toast-bg: rgba(0, 0, 0, 0.6);
+  --toast-bg: var(--sidebar-bg);
   --toast-text: #e0e0e0;
 }
 
@@ -213,9 +213,9 @@ body {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  width: 48px;
-  height: 48px;
-  font-size: 18px;
+  width: 40px;
+  height: 40px;
+  font-size: 14px;
   background-color: var(--toolbar-btn-bg);
   color: var(--text-color);
   transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1); !important 
@@ -226,14 +226,15 @@ body {
 }
 
 .save-btn {
-  padding: 10px 16px;
+  padding: 10px 12px;
+  height: 40px;
   border-radius: 4px;
   display: flex;
   align-items: center;
   cursor: pointer;
   transition: background-color 0.3s ease;
   border: none;
-  font-size: 18px;
+  font-size: 14px;
   background-color: var(--primary-color);
   color: white;
 }

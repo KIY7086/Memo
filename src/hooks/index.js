@@ -84,6 +84,29 @@ export const useMemoStorage = () => {
   return { memos, setMemos, currentMemo, setCurrentMemo, saveMemo, createNewMemo };
 };
 
+export const useConfigureToast = () => {
+  useEffect(() => {
+    function isMobile() {
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      const screenWidth = window.screen.width;
+      const isMobileDevice = /android|iPhone|iPod|iPad|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+      const isTablet = screenWidth >= 768;
+
+      return isMobileDevice && !isTablet;
+    }
+
+    function configureToast() {
+      if (isMobile()) {
+        document.documentElement.style.setProperty('--toast-border-radius', '0');
+      } else {
+        document.documentElement.style.setProperty('--toast-border-radius', '10px');
+      }
+    }
+
+    configureToast();
+  }, []);
+};
+
 export const showToast = (message, type = "info") => {
   toast.dismiss();
 
