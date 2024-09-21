@@ -118,9 +118,9 @@ export const showToast = (message, type = "info") => {
     position: "top-right",
     autoClose: 1,
     hideProgressBar: true,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
+    closeOnClick: false,
+    pauseOnHover: false,
+    draggable: false,
     closeButton: false,
     className: "Toastify__toast--animate",
     style: {

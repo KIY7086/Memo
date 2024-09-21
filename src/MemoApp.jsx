@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./styles/style.css";
-import "./styles/toast.css";
+import "./styles/animations.css";
 
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";

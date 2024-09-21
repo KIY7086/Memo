@@ -41,37 +41,11 @@
 * {
   margin: 0;
   padding: 0;
-  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
-  transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.theme-toggle-btn, .menu-icon {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.title-wrapper .title-background, .app-title, .app-title-input {
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 0.4s ease,
-              background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.app-header, .toolbar, .memo-item, .sidebar, .editor-container {
-  transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
-              color 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.memo-item:hover {
-  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .app-container {
@@ -115,7 +89,6 @@ body {
   background: none;
   z-index: 150;
   opacity: 0;
-  transition: opacity 0.3s ease;
   pointer-events: none;
 }
 
@@ -132,8 +105,6 @@ body {
   width: 0;
   overflow: hidden;
   backdrop-filter: blur(10px);
-  transition: width 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55),
-      opacity 0.2s ease;
   z-index: 200;
   opacity: 0;
   background-color: var(--sidebar-bg);
@@ -143,7 +114,6 @@ body {
 .sidebar.open {
   width: 250px;
   opacity: 1;
-  transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease;
 }
 
 .memo-item {
@@ -151,7 +121,6 @@ body {
   padding: 10px 14px;
   border-radius: 4px;
   margin-bottom: 8px;
-  transition: background-color 0.3s ease;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;
@@ -218,7 +187,6 @@ body {
   font-size: 14px;
   background-color: var(--toolbar-btn-bg);
   color: var(--text-color);
-  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1); !important 
 }
 
 .toolbar-btn:hover {
@@ -232,7 +200,6 @@ body {
   display: flex;
   align-items: center;
   cursor: pointer;
-  transition: background-color 0.3s ease;
   border: none;
   font-size: 14px;
   background-color: var(--primary-color);
@@ -264,7 +231,6 @@ body {
   border-radius: 12px;
   transform: translate(-50%, -50%) scale(0.8);
   opacity: 0;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 6px 8px;
   border: 2px solid var(--title-border);
   z-index: 4;
@@ -292,13 +258,11 @@ body {
   bottom: 0;
   font-size: 14px;
   opacity: 0;
-  transition: opacity 0.3s ease;
   z-index: 5;
 }
 
 .title-wrapper:hover .edit-icon {
   opacity: 1;
-  transition: opacity 1s ease;
 }
 
 .app-title-input {
@@ -341,7 +305,6 @@ body {
   color: var(--primary-color);
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s ease;
   text-align: left;
   text-overflow: clip;
   white-space: nowrap;
@@ -372,7 +335,6 @@ body {
   border: none;
   font-size: 22px;
   cursor: pointer;
-  transition: all 0.3s ease;
   color: var(--text-color);
 }
 
@@ -381,7 +343,6 @@ body {
   border: none;
   font-size: 1.2rem;
   cursor: pointer;
-  transition: all 0.3s ease;
   color: var(--text-color);
   padding: 0;
 }
@@ -392,10 +353,23 @@ body {
 
 ul {
   margin-left: 16px;
-  
 }
 
 .task-list-item{
   margin-left: -16px;
   list-style-type: none;
+}
+
+.Toastify__toast-container {
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.Toastify__toast {
+    pointer-events: auto;
+    background: var(--toast-bg) !important;
+    backdrop-filter: blur(var(--toast-blur));
+    border-radius: var(--toast-border-radius);
+    box-shadow: var(--toast-shadow);
+    color: var(--toast-text);
 }
