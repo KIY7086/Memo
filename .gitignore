@@ -5,3 +5,4 @@ node_modules
 .pnp.*
 *.bak
 dist
+lua-language-server
