@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
@@ -6,11 +6,7 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 
-const Editor = ({ currentMemo, setCurrentMemo }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const editorRef = useRef(null);
-  const previewRef = useRef(null);
-
+const Editor = ({ currentMemo, setCurrentMemo, isEditing, setIsEditing, editorRef }) => {
   const handleContentChange = (e) => {
     const newContent = e.target.value;
     setCurrentMemo(prevMemo => ({ ...prevMemo, content: newContent }));
@@ -32,7 +28,7 @@ const Editor = ({ currentMemo, setCurrentMemo }) => {
     if (isEditing && editorRef.current) {
       editorRef.current.focus();
     }
-  }, [isEditing]);
+  }, [isEditing, editorRef]);
 
   return (
     <div className="editor-container" onClick={handleContainerClick}>
@@ -42,11 +38,9 @@ const Editor = ({ currentMemo, setCurrentMemo }) => {
           className="editor-content"
           value={currentMemo.content}
           onChange={handleContentChange}
-          onBlur={() => setIsEditing(false)}
         />
       ) : (
         <div 
-          ref={previewRef}
           className="editor-preview" 
           onClick={handlePreviewClick}
         >

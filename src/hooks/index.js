@@ -1,5 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { toast } from "react-toastify";
+import React, { useState, useEffect, useCallback } from "react";
 import { faSun, faMoon, faAdjust } from "@fortawesome/free-solid-svg-icons";
 
 export const useTheme = () => {
@@ -65,69 +64,25 @@ export const useMemoStorage = () => {
   }, []);
 
   const saveMemo = useCallback((memoToSave) => {
-    const updatedMemos = memos.map((memo) => memo.id === memoToSave.id ? memoToSave : memo);
-    setMemos(updatedMemos);
-    localStorage.setItem("memos", JSON.stringify(updatedMemos));
-    localStorage.setItem("currentMemoId", memoToSave.id.toString());
-  }, [memos]);
+    setMemos((prevMemos) => {
+      const updatedMemos = prevMemos.map((memo) => memo.id === memoToSave.id ? memoToSave : memo);
+      localStorage.setItem("memos", JSON.stringify(updatedMemos));
+      localStorage.setItem("currentMemoId", memoToSave.id.toString());
+      return updatedMemos;
+    });
+  }, []);
 
   const createNewMemo = useCallback(() => {
     const newMemo = { id: Date.now(), title: `新建备忘录 ${memos.length + 1}`, content: "" };
-    const updatedMemos = [...memos, newMemo];
-    setMemos(updatedMemos);
+    setMemos((prevMemos) => {
+      const updatedMemos = [...prevMemos, newMemo];
+      localStorage.setItem("memos", JSON.stringify(updatedMemos));
+      localStorage.setItem("currentMemoId", newMemo.id.toString());
+      return updatedMemos;
+    });
     setCurrentMemo(newMemo);
-    localStorage.setItem("memos", JSON.stringify(updatedMemos));
-    localStorage.setItem("currentMemoId", newMemo.id.toString());
     return newMemo;
-  }, [memos]);
+  }, [memos.length]);
 
   return { memos, setMemos, currentMemo, setCurrentMemo, saveMemo, createNewMemo };
-};
-
-export const useConfigureToast = () => {
-  useEffect(() => {
-    function isMobile() {
-      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-      const screenWidth = window.screen.width;
-      const isMobileDevice = /android|iPhone|iPod|iPad|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
-      const isTablet = screenWidth >= 768;
-
-      return isMobileDevice && !isTablet;
-    }
-
-    function configureToast() {
-      if (isMobile()) {
-        document.documentElement.style.setProperty('--toast-border-radius', '0');
-      } else {
-        document.documentElement.style.setProperty('--toast-border-radius', '10px');
-      }
-    }
-
-    configureToast();
-  }, []);
-};
-
-export const showToast = (message, type = "info") => {
-  toast.dismiss();
-
-  const root = document.documentElement;
-  const headerBg = getComputedStyle(root).getPropertyValue("--header-bg").trim();
-  const textColor = getComputedStyle(root).getPropertyValue("--text-color").trim();
-
-  const toastId = toast[type](message, {
-    position: "top-right",
-    autoClose: 1,
-    hideProgressBar: true,
-    closeOnClick: false,
-    pauseOnHover: false,
-    draggable: false,
-    closeButton: false,
-    className: "Toastify__toast--animate",
-    style: {
-      backgroundColor: headerBg,
-      color: textColor,
-    },
-  });
-
-  return toastId;
 };

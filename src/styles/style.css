@@ -13,11 +13,9 @@
   --toolbar-btn-bg: #f2f0e9;
   --toolbar-btn-hover-bg: #d8d6cf;
   --toast-bg: var(--sidebar-bg);
-  --toast-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-  --toast-text: var(--text-color);
-  --toast-blur: 10px;
+  --toast-blur: 12px;
   --toast-border-radius: 10px;
-  --toast-transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --toast-margin: 8px;
 }
 
 [data-theme="dark"] {
@@ -35,7 +33,6 @@
   --toolbar-btn-bg: #2a2a27;
   --toolbar-btn-hover-bg: #3a3a37;
   --toast-bg: var(--sidebar-bg);
-  --toast-text: #e0e0e0;
 }
 
 * {
@@ -360,16 +357,3 @@ ul {
   list-style-type: none;
 }
 
-.Toastify__toast-container {
-    z-index: 9999;
-    pointer-events: none;
-}
-
-.Toastify__toast {
-    pointer-events: auto;
-    background: var(--toast-bg) !important;
-    backdrop-filter: blur(var(--toast-blur));
-    border-radius: var(--toast-border-radius);
-    box-shadow: var(--toast-shadow);
-    color: var(--toast-text);
-}

@@ -84,15 +84,3 @@ body { transition: background-color 0.4s ease; }
 .new-memo-btn { transition: background-color 0.3s ease; }
 .theme-toggle-btn { transition: all 0.3s ease; }
 .icon-btn { transition: all 0.3s ease; }
-
-.Toastify__toast--animate {
-    animation: toast-animate 3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-.Toastify__toast {
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
-                box-shadow 0.3s ease;
-}
-.Toastify__toast:hover {
-    transform: scale(1.03) translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
-}
