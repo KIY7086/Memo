@@ -50,7 +50,7 @@
     transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-.toolbar-btn:hover, .save-btn:hover, .theme-toggle-btn:hover, .icon-btn:hover, .new-memo-btn:hover {
+.toolbar-btn:hover:not(:disabled), .save-btn:hover, .theme-toggle-btn:hover, .icon-btn:hover, .new-memo-btn:hover {
     animation: buttonHover 0.4s ease-in-out;
 }
 
@@ -76,7 +76,7 @@ body { transition: background-color 0.4s ease; }
 .sidebar { transition: width 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.2s ease; }
 .sidebar.open { transition: width 0.65s cubic-bezier(0.47, 1.33, 0.56, 0.97), opacity 0.2s ease; }
 .memo-item { transition: background-color 0.3s ease; }
-.toolbar-btn { transition: background-color 0.4s cubic-bezier(0.4, 0, 0); }
+.toolbar-btn:not(:disabled) { transition: background-color 0.4s cubic-bezier(0.4, 0, 0); }
 .save-btn { transition: background-color 0.3s ease; }
 .title-background { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 .app-title .edit-icon { transition: opacity 0.3s ease; }

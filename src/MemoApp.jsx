@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useRef } from "react";
+import Modal from 'react-modal';
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import "./styles/style.css";
 import "./styles/animations.css";
 import "./styles/toast.css";
@@ -10,6 +11,10 @@ import Toolbar from "./components/Toolbar";
 import ToastContainer from './components/Toast';
 import { toast } from './components/Toast';
 import { useTheme, useMemoStorage } from "./hooks/index.js";
+import { getImage, saveImage } from './utils/indexedDB';
+import { v4 as uuidv4 } from 'uuid';
+
+Modal.setAppElement('#root');
 
 const MemoApp = () => {
   const { theme, handleThemeChange, getThemeIcon } = useTheme();
@@ -18,6 +23,18 @@ const MemoApp = () => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const editorRef = useRef(null);
+
+  // 改进的撤销/重做状态
+  const [memoHistory, setMemoHistory] = useState([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
+
+  // 当 currentMemo 变化时更新历史记录
+  useEffect(() => {
+    if (currentMemo && isEditing) {
+      setMemoHistory(prev => [...prev.slice(0, historyIndex + 1), currentMemo]);
+      setHistoryIndex(prev => prev + 1);
+    }
+  }, [currentMemo, isEditing]);
 
   const handleSave = useCallback(() => {
     if (!currentMemo.title) {
@@ -31,55 +48,69 @@ const MemoApp = () => {
 
   const handleNewMemo = () => {
     const newMemo = createNewMemo();
+    setMemoHistory([newMemo]);
+    setHistoryIndex(0);
     toast("新建备忘录成功", "success");
   };
 
-  const handleToolbarAction = useCallback((action, value) => {
-    if (!isEditing) {
+  const handleToolbarAction = useCallback(async (action, value) => {
+    if (!isEditing && action !== "share") {
       setIsEditing(true);
       return;
     }
 
     const textarea = editorRef.current;
-    if (!textarea) return;
+    if (!textarea && action !== "share") return;
 
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
+    const start = textarea ? textarea.selectionStart : 0;
+    const end = textarea ? textarea.selectionEnd : 0;
     const content = currentMemo.content;
-    const selectedText = content.substring(start, end);
 
     let newContent = content;
     let newStart = start;
     let newEnd = end;
 
     switch (action) {
-      case "bold":
-        newContent = content.substring(0, start) + `**${selectedText}**` + content.substring(end);
-        newEnd = newStart + selectedText.length + 4;
-        break;
-      case "italic":
-        newContent = content.substring(0, start) + `*${selectedText}*` + content.substring(end);
-        newEnd = newStart + selectedText.length + 2;
-        break;
-      case "list":
-        newContent = content.substring(0, start) + `\n- ${selectedText}` + content.substring(end);
-        newEnd = newStart + selectedText.length + 3;
-        break;
+      case "undo":
+        if (historyIndex > 0) {
+          setHistoryIndex(prev => prev - 1);
+          setCurrentMemo(memoHistory[historyIndex - 1]);
+        }
+        return;
+      case "redo":
+        if (historyIndex < memoHistory.length - 1) {
+          setHistoryIndex(prev => prev + 1);
+          setCurrentMemo(memoHistory[historyIndex + 1]);
+        }
+        return;
       case "image":
-        newContent = content.substring(0, start) + value + content.substring(end);
-        newEnd = newStart + value.length;
+        if (value instanceof File) {
+          const imageId = uuidv4();
+          await saveImage(imageId, value);
+          const imageMarkdown = `![${value.name}](local:${imageId})`;
+          newContent = content.substring(0, start) + imageMarkdown + content.substring(end);
+          newEnd = newStart + imageMarkdown.length;
+        } else {
+          newContent = content.substring(0, start) + value + content.substring(end);
+          newEnd = newStart + value.length;
+        }
         break;
+      case "share":
+        // 处理分享逻辑
+        return;
       default:
         return;
     }
 
     setCurrentMemo(prevMemo => ({ ...prevMemo, content: newContent }));
 
-    setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(newStart, newEnd);
-    }, 0);
-  }, [isEditing, currentMemo, setCurrentMemo]);
+    if (textarea) {
+      setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(newStart, newEnd);
+      }, 0);
+    }
+  }, [isEditing, currentMemo, setCurrentMemo, memoHistory, historyIndex]);
 
   return (
     <div className="app-container">
@@ -118,6 +149,8 @@ const MemoApp = () => {
             isEditing={isEditing}
             onToolbarAction={handleToolbarAction}
             toast={toast}
+            canUndo={historyIndex > 0}
+            canRedo={historyIndex < memoHistory.length - 1}
           />
         </div>
       </div>
