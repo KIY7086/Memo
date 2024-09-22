@@ -213,6 +213,55 @@ body {
   background-color: var(--toolbar-bg)
 }
 
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px;
+  background-color: var(--toolbar-bg);
+  height: 40px;
+  overflow-y: disable;
+  margin-bottom: 7px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--primary-color);
+  color: var(--editor-bg);
+  border-radius: var(--border-radius);
+  padding: 4px 8px;
+  margin-right: 8px;
+  font-size: 0.9rem;
+}
+
+.tag button {
+  background: none;
+  border: none;
+  color: var(--editor-bg);
+  margin-left: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  line-height: 1;
+  padding: 0;
+  font-size: 0.9rem;
+}
+
+.tag button:hover {
+  transform: scale(1.2);
+}
+
+.tag-input {
+  flex-grow: 1;
+  max-width: 150px;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  border-radius: var(--border-radius);
+}
+
 .editor-content,
 .editor-preview {
   width: 100%;
@@ -262,6 +311,12 @@ body {
   padding: 8px;
   border-radius: var(--border-radius);
   border: 1px solid var(--primary-color);
+  background-color: var(--bg-color);
+  box-shadow: var(--box-shadow);
+}
+
+.toolbar-tag-input:focus input {
+  border: 2px solid var(--primary-color);
 }
 
 .toolbar-tag-input button {
@@ -271,6 +326,7 @@ body {
   color: var(--editor-bg);
   border-radius: var(--border-radius);
   cursor: pointer;
+  box-shadow: var(--box-shadow);
   transition: transform 0.2s ease, background-color 0.3s ease;
 }
 
@@ -836,53 +892,4 @@ ul {
     transform: translateX(100%);
     opacity: 0;
   }
-}
-
-.tags-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 8px;
-  background-color: var(--toolbar-bg);
-  height: 40px;
-  overflow-y: disable;
-  margin-bottom: 7px;
-}
-
-.tag {
-  display: inline-flex;
-  align-items: center;
-  background-color: var(--primary-color);
-  color: var(--editor-bg);
-  border-radius: var(--border-radius);
-  padding: 4px 8px;
-  margin-right: 8px;
-  font-size: 0.9rem;
-}
-
-.tag button {
-  background: none;
-  border: none;
-  color: var(--editor-bg);
-  margin-left: 4px;
-  cursor: pointer;
-  font-weight: bold;
-  line-height: 1;
-  padding: 0;
-  font-size: 0.9rem;
-}
-
-.tag button:hover {
-  transform: scale(1.2);
-}
-
-.tag-input {
-  flex-grow: 1;
-  max-width: 150px;
-  background: none;
-  border: none;
-  outline: none;
-  font-size: 0.9rem;
-  color: var(--text-color);
-  border-radius: var(--border-radius);
 }
