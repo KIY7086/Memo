@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ReactDOM from 'react-dom';
-import { Info, CheckCircle, Warning, Error } from '@mui/icons-material';
+import { Info, CheckCircle, Warning, Error, Close } from '@mui/icons-material';
 
 const icons = {
   info: Info,
@@ -11,7 +11,6 @@ const icons = {
 
 const TOAST_DURATION = 3000; // 3 seconds
 const ANIMATION_DURATION = 500; // 0.5 seconds
-const MAX_TOASTS = 5;
 
 const ToastContainer = () => {
   const [toasts, setToasts] = useState([]);
@@ -31,7 +30,7 @@ const ToastContainer = () => {
   const addToast = useCallback((message, type = 'info') => {
     const id = Date.now();
     const newToast = { id, message, type, isClosing: false, isNew: true };
-    setToasts(prevToasts => [newToast, ...prevToasts].slice(0, MAX_TOASTS));
+    setToasts(prevToasts => [newToast, ...prevToasts]);
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
@@ -56,14 +55,19 @@ const ToastContainer = () => {
   return ReactDOM.createPortal(
     <div className="toast-container">
       {toasts.map((toast, index) => (
-        <Toast key={toast.id} {...toast} index={index} />
+        <Toast 
+          key={toast.id} 
+          {...toast} 
+          index={index} 
+          onClose={() => removeToast(toast.id)}
+        />
       ))}
     </div>,
     document.body
   );
 };
 
-const Toast = ({ id, message, type, isClosing, isNew, index }) => {
+const Toast = ({ id, message, type, isClosing, isNew, index, onClose }) => {
   const Icon = icons[type] || icons.info;
 
   return (
@@ -73,6 +77,9 @@ const Toast = ({ id, message, type, isClosing, isNew, index }) => {
     >
       <Icon className="toast-icon material-symbols-rounded" />
       <span className="toast-message">{message}</span>
+      <button className="toast-close" onClick={onClose}>
+        <Close fontSize="small" />
+      </button>
     </div>
   );
 };

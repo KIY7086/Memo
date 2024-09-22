@@ -59,7 +59,7 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
         />
       </div>
       <button className="save-btn" onClick={handleSave}>
-        <FontAwesomeIcon icon={faSave} />  保存
+        <FontAwesomeIcon icon={faSave} />&nbsp; 保存
       </button>
     </div>
   );
