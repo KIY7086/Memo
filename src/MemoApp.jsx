@@ -1,8 +1,6 @@
 import Modal from 'react-modal';
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import "./styles/style.css";
-import "./styles/animations.css";
-import "./styles/toast.css";
 
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
@@ -133,14 +131,14 @@ const MemoApp = () => {
         />
         <div className="main-content">
           <Editor
-            currentMemo={currentMemo}
+            currentMemo={currentMemo || { content: "", tags: [] }}
             setCurrentMemo={setCurrentMemo}
             isEditing={isEditing}
             setIsEditing={setIsEditing}
             editorRef={editorRef}
           />
           <Toolbar
-            currentMemo={currentMemo}
+            currentMemo={currentMemo || { title: "", content: "", tags: [] }}
             setCurrentMemo={setCurrentMemo}
             handleSave={handleSave}
             isEditing={isEditing}

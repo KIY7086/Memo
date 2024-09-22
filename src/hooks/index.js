@@ -46,7 +46,7 @@ export const useTheme = () => {
 
 export const useMemoStorage = () => {
     const [memos, setMemos] = useState([]);
-    const [currentMemo, setCurrentMemo] = useState({ id: null, title: "", content: "" });
+    const [currentMemo, setCurrentMemo] = useState({ id: null, title: "", content: "", tags: [] });
 
     useEffect(() => {
         const fetchGuideContent = async () => {
@@ -57,7 +57,8 @@ export const useMemoStorage = () => {
                     const initialMemo = {
                         id: Date.now(),
                         title: "使用指南",
-                        content: guideContent
+                        content: guideContent,
+                        tags: ["#教程"]
                     };
                     setMemos([initialMemo]);
                     setCurrentMemo(initialMemo);
@@ -91,7 +92,7 @@ export const useMemoStorage = () => {
     }, []);
 
     const createNewMemo = useCallback(() => {
-        const newMemo = { id: Date.now(), title: `新建备忘录 ${memos.length + 1}`, content: "" };
+        const newMemo = { id: Date.now(), title: `新建备忘录 ${memos.length + 1}`, content: "", tags: [] };
         setMemos((prevMemos) => {
             const updatedMemos = [...prevMemos, newMemo];
             localStorage.setItem("memos", JSON.stringify(updatedMemos));

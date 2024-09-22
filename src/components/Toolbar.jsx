@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUndo,
@@ -8,6 +8,7 @@ import {
   faSave,
   faFileDownload,
   faFileImage,
+  faCaretUp
 } from "@fortawesome/free-solid-svg-icons";
 import { marked } from 'marked';
 import html2canvas from 'html2canvas';
@@ -17,7 +18,32 @@ import { saveImage, getImage } from '../utils/indexedDB';
 
 const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbarAction, toast, canUndo, canRedo }) => {
   const fileInputRef = useRef(null);
+  const dropdownButtonRef = useRef(null);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+  const [tag, setTag] = useState("");
+  const [rotation, setRotation] = useState(0);
+
+  useEffect(() => {
+    if (dropdownButtonRef.current) {
+      dropdownButtonRef.current.style.transform = `rotate(${rotation}deg)`;
+      dropdownButtonRef.current.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    }
+  }, [rotation]);
+
+  const toggleDropdown = () => {
+    if (isDropdownOpen) {
+      setIsClosing(true);
+      setTimeout(() => {
+        setIsDropdownOpen(false);
+        setIsClosing(false);
+      }, 300);
+    } else {
+      setIsDropdownOpen(true);
+    }
+    setRotation(prevRotation => prevRotation === 0 ? 180 : 0);
+  };
 
   const handleToolbarClick = (action) => {
     if (!isEditing && action !== "share") {
@@ -124,6 +150,16 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
     }
   };
 
+  const handleAddTag = () => {
+    if(tag && !currentMemo.tags.includes(tag)) {
+      setCurrentMemo({ ...currentMemo, tags: [...currentMemo.tags, tag] });
+      setTag("");
+      toast("标签添加成功", "success");
+    } else {
+      toast(tag ? "标签已存在" : "标签不能为空", "warning");
+    }
+  };
+
   const ToolbarButton = ({ icon, action, label, disabled }) => (
     <button 
       onClick={() => handleToolbarClick(action)} 
@@ -137,6 +173,13 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
 
   return (
     <div className="toolbar">
+      <button
+        ref={dropdownButtonRef}
+        className="icon-btn"
+        onClick={toggleDropdown}
+      >
+        <FontAwesomeIcon icon={faCaretUp} />
+      </button>
       <div className="toolbar-buttons">
         <ToolbarButton icon={faUndo} action="undo" label="撤销" disabled={!canUndo} />
         <ToolbarButton icon={faRedo} action="redo" label="重做" disabled={!canRedo} />
@@ -153,6 +196,17 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
       <button className="save-btn" onClick={handleSave}>
         <FontAwesomeIcon icon={faSave} /> &nbsp; 保存
       </button>
+      <div className={`toolbar-dropdown ${isDropdownOpen ? 'open' : ''} ${isClosing ? 'closing' : ''}`}>
+        <div className="toolbar-tag-input">
+          <input 
+            type="text" 
+            value={tag}
+            onChange={(e) => setTag(e.target.value)}
+            placeholder="输入标签"
+          />
+          <button onClick={handleAddTag}>添加标签</button>
+        </div>
+      </div>
 
       <Modal
         isOpen={isShareModalOpen}

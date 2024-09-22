@@ -69,8 +69,23 @@ const Editor = ({ currentMemo, setCurrentMemo, isEditing, setIsEditing, editorRe
     };
   }, [processedContent]);
 
+  const handleTagRemove = (tagToRemove) => {
+    setCurrentMemo((prevMemo) => ({
+      ...prevMemo,
+      tags: prevMemo.tags.filter((tag) => tag !== tagToRemove),
+    }));
+  };
+
   return (
     <div className="editor-container" onClick={handleContainerClick}>
+      <div className="tags-container">
+        {currentMemo.tags.map((tag) => (
+          <div key={tag} className="tag">
+            {tag}
+            <button onClick={() => handleTagRemove(tag)}>×</button>
+          </div>
+        ))}
+      </div>
       {isEditing ? (
         <textarea
           ref={editorRef}
