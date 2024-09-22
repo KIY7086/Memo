@@ -59,7 +59,6 @@ const Editor = ({ currentMemo, setCurrentMemo, isEditing, setIsEditing, editorRe
     }
   }, [isEditing, editorRef]);
 
-  // 清理函数来释放 Blob URLs
   useEffect(() => {
     return () => {
       const localImageRegex = /!\[([^\]]*)\]\((blob:[^)]+)\)/g;

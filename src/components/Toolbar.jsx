@@ -8,16 +8,12 @@ import {
   faSave,
   faFileDownload,
   faFileImage,
-  faTimes
 } from "@fortawesome/free-solid-svg-icons";
 import { marked } from 'marked';
 import html2canvas from 'html2canvas';
 import Modal from 'react-modal';
 import { v4 as uuidv4 } from 'uuid';
 import { saveImage, getImage } from '../utils/indexedDB';
-
-// 确保设置 Modal 的 appElement
-Modal.setAppElement('#root'); // 请替换为你的根元素 ID
 
 const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbarAction, toast, canUndo, canRedo }) => {
   const fileInputRef = useRef(null);
@@ -155,7 +151,7 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
         />
       </div>
       <button className="save-btn" onClick={handleSave}>
-        <FontAwesomeIcon icon={faSave} />  保存
+        <FontAwesomeIcon icon={faSave} /> &nbsp; 保存
       </button>
 
       <Modal
@@ -186,9 +182,6 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
         <div className="modal-content">
           <div className="modal-header">
             <h2>选择分享方式</h2>
-            <button onClick={() => setIsShareModalOpen(false)} className="icon-btn">
-              <FontAwesomeIcon icon={faTimes} />
-            </button>
           </div>
           <div className="modal-body">
             <button onClick={handleDownloadMarkdown} className="modal-btn">

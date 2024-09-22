@@ -24,11 +24,9 @@ const MemoApp = () => {
   const [isEditing, setIsEditing] = useState(false);
   const editorRef = useRef(null);
 
-  // 改进的撤销/重做状态
   const [memoHistory, setMemoHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
 
-  // 当 currentMemo 变化时更新历史记录
   useEffect(() => {
     if (currentMemo && isEditing) {
       setMemoHistory(prev => [...prev.slice(0, historyIndex + 1), currentMemo]);
@@ -96,7 +94,6 @@ const MemoApp = () => {
         }
         break;
       case "share":
-        // 处理分享逻辑
         return;
       default:
         return;
