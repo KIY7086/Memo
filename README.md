@@ -1,6 +1,9 @@
 # KIY7086/Memo
 一个由React.js构建的Web备忘录<br>
 
+## 示例地址
+https://memo.kiy7086.com<br>
+
 ## 功能：
 1.localstorage存储备忘录数据<br>
 2.菜单栏多备忘录切换<br>
