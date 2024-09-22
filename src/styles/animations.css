@@ -74,7 +74,7 @@ body { transition: background-color 0.4s ease; }
 .memo-item:hover { transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 .sidebar-backdrop { transition: opacity 0.3s; }
 .sidebar { transition: width 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.2s ease; }
-.sidebar.open { transition: width 0.65s cubic-bezier(0.47, 1.33, 0.56, 0.97), opacity 0.2s ease; }
+.sidebar.open { transition: width 0.45s cubic-bezier(0.47, 1.33, 0.56, 0.97), opacity 0.2s ease; }
 .memo-item { transition: background-color 0.3s ease; }
 .toolbar-btn:not(:disabled) { transition: background-color 0.4s cubic-bezier(0.4, 0, 0); }
 .save-btn { transition: background-color 0.3s ease; }
