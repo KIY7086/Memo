@@ -5,6 +5,8 @@
 1.localstorage存储备忘录数据<br>
 2.菜单栏多备忘录切换<br>
 3.Markdown支持<br>
+4.原生HTML支持<br>
+5.备忘录Tag<br>
 
 ## 未来会支持的功能
 1.备忘录数据导出<br>
