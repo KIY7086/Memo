@@ -6,6 +6,8 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import { getImage } from '../utils/indexedDB';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const Editor = ({ currentMemo, setCurrentMemo, isEditing, setIsEditing, editorRef }) => {
   const [processedContent, setProcessedContent] = useState('');
@@ -81,8 +83,10 @@ const Editor = ({ currentMemo, setCurrentMemo, isEditing, setIsEditing, editorRe
       <div className="tags-container">
         {currentMemo.tags.map((tag) => (
           <div key={tag} className="tag">
-            {tag}
-            <button onClick={() => handleTagRemove(tag)}>×</button>
+            # &nbsp; {tag}
+            <button onClick={() => handleTagRemove(tag)}>
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
           </div>
         ))}
       </div>
