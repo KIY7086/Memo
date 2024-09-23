@@ -58,7 +58,7 @@ export const useMemoStorage = () => {
                         id: Date.now(),
                         title: "使用指南",
                         content: guideContent,
-                        tags: ["#教程"]
+                        tags: ["教程"]
                     };
                     setMemos([initialMemo]);
                     setCurrentMemo(initialMemo);

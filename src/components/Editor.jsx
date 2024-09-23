@@ -83,7 +83,7 @@ const Editor = ({ currentMemo, setCurrentMemo, isEditing, setIsEditing, editorRe
       <div className="tags-container">
         {currentMemo.tags.map((tag) => (
           <div key={tag} className="tag">
-            # &nbsp; {tag}
+            #&nbsp;{tag}
             <button onClick={() => handleTagRemove(tag)}>
               <FontAwesomeIcon icon={faTimes} />
             </button>
