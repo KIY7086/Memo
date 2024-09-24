@@ -307,7 +307,7 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
               下载渲染图
             </button>
             <button onClick={handleExportJSON} className="modal-btn">
-              <FontAwesomeIcon icon={faFileDownload} />
+              <FontAwesomeIcon icon={faFileExport} />
               导出全部备忘录
             </button>
           </div>
