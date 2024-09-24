@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ReactMarkdown from "react-markdown";
+import Markdown from "react-markdown";
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import remarkMath from 'remark-math';
@@ -31,7 +31,7 @@ const Editor = ({ currentMemo, setCurrentMemo, isEditing, setIsEditing, editorRe
           content = content.replace(fullMatch, `![${altText}](${url})`);
         }
       }
-
+      content = content.replace(/`/g, '\\`');
       setProcessedContent(content);
     };
 
@@ -102,12 +102,12 @@ const Editor = ({ currentMemo, setCurrentMemo, isEditing, setIsEditing, editorRe
           className="editor-preview" 
           onClick={handlePreviewClick}
         >
-          <ReactMarkdown 
+          <Markdown 
             remarkPlugins={[remarkGfm, remarkMath]}
             rehypePlugins={[rehypeRaw, rehypeKatex]}
           >
             {processedContent}
-          </ReactMarkdown>
+          </Markdown>
         </div>
       )}
     </div>
