@@ -8,16 +8,19 @@ import {
   faSave,
   faFileDownload,
   faFileImage,
-  faCaretUp
+  faCaretUp,
+  faFileExport,
+  faFileImport
 } from "@fortawesome/free-solid-svg-icons";
-import { marked } from 'marked';
 import html2canvas from 'html2canvas';
 import Modal from 'react-modal';
 import { v4 as uuidv4 } from 'uuid';
 import { saveImage, getImage } from '../utils/indexedDB';
 
-const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbarAction, toast, canUndo, canRedo }) => {
+const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbarAction, toast, canUndo, canRedo, memos, setMemos }) => {
   const fileInputRef = useRef(null);
+  const importOverwriteInputRef = useRef(null);
+  const importAppendInputRef = useRef(null);
   const dropdownButtonRef = useRef(null);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -46,7 +49,7 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
   };
 
   const handleToolbarClick = (action) => {
-    if (!isEditing && action !== "share") {
+    if (!isEditing && action !== "share" && action !== "exportAll" && action !== "importOverwrite" && action !== "importAppend") {
       toast("请先进入编辑模式", "warning");
       return;
     }
@@ -58,19 +61,12 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
       toast("没有可撤销的操作", "info");
     } else if (action === "redo" && !canRedo) {
       toast("没有可重做的操作", "info");
+    } else if (action === "importOverwrite") {
+      importOverwriteInputRef.current.click();
+    } else if (action === "importAppend") {
+      importAppendInputRef.current.click();
     } else {
       onToolbarAction(action);
-    }
-  };
-
-  const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageId = uuidv4();
-      await saveImage(imageId, file);
-      const imageMarkdown = `![${file.name}](local:${imageId})`;
-      onToolbarAction("image", imageMarkdown);
-      toast("图片上传成功", "success");
     }
   };
 
@@ -103,32 +99,42 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
     toast("Markdown 文件下载成功", "success");
   };
 
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const imageId = uuidv4();
+      await saveImage(imageId, file);
+      const imageMarkdown = `![${file.name}](local:${imageId})`;
+      onToolbarAction("image", imageMarkdown);
+      toast("图片上传成功", "success");
+    }
+  };
+
+  const handleExportJSON = () => {
+    const dataStr = JSON.stringify(memos, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    const exportFileDefaultName = 'memos.json';
+
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+    setIsShareModalOpen(false);
+    toast("备忘录导出成功", "success");
+  };
+
   const handleExportImage = async () => {
     try {
-      let content = currentMemo.content;
-      const localImageRegex = /!\[([^\]]*)\]\(local:([^)]+)\)/g;
-      const matches = content.matchAll(localImageRegex);
-
-      for (const match of matches) {
-        const [fullMatch, altText, imageId] = match;
-        const file = await getImage(imageId);
-        if (file) {
-          const url = URL.createObjectURL(file);
-          content = content.replace(fullMatch, `![${altText}](${url})`);
-        }
+      const previewElement = document.querySelector('.editor-preview');
+      if (!previewElement) {
+        throw new Error('Preview element not found');
       }
 
-      const htmlContent = marked(content);
-      const container = document.createElement('div');
-      container.innerHTML = htmlContent;
-      container.style.padding = '20px';
-      container.style.width = '800px';
-      container.style.position = 'absolute';
-      container.style.left = '-9999px';
-      document.body.appendChild(container);
-
-      const canvas = await html2canvas(container);
-      document.body.removeChild(container);
+      const canvas = await html2canvas(previewElement, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: null
+      });
 
       canvas.toBlob((blob) => {
         const url = URL.createObjectURL(blob);
@@ -140,13 +146,45 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
-      });
+      }, 'image/png', 1);
 
       setIsShareModalOpen(false);
-      toast("渲染图片下载成功", "success");
+      toast("预览图片导出成功", "success");
     } catch (error) {
       console.error("Error exporting image:", error);
       toast("导出图片失败", "error");
+    }
+  };
+
+  const handleImportMemos = (event, mode) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const importedMemos = JSON.parse(e.target.result);
+          if (Array.isArray(importedMemos)) {
+            if (mode === 'overwrite') {
+              setMemos(importedMemos);
+              toast(`成功导入并覆盖 ${importedMemos.length} 个备忘录`, "success");
+            } else if (mode === 'append') {
+              const newMemos = importedMemos.map(memo => ({
+                ...memo,
+                id: Date.now() + Math.random()
+              }));
+              setMemos(prevMemos => [...prevMemos, ...newMemos]);
+              toast(`成功追加 ${newMemos.length} 个备忘录`, "success");
+            }
+            handleSave(); // 自动保存导入的备忘录
+          } else {
+            throw new Error('Invalid JSON format');
+          }
+        } catch (error) {
+          console.error("Error importing memos:", error);
+          toast("导入失败，请确保文件格式正确", "error");
+        }
+      };
+      reader.readAsText(file);
     }
   };
 
@@ -206,6 +244,28 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
           />
           <button onClick={handleAddTag}>添加标签</button>
         </div>
+        <button onClick={() => handleToolbarClick("importOverwrite")} className="import-btn">
+          <FontAwesomeIcon icon={faFileImport} />
+          导入（覆盖）
+        </button>
+        <button onClick={() => handleToolbarClick("importAppend")} className="import-btn">
+          <FontAwesomeIcon icon={faFileImport} />
+          导入（追加）
+        </button>
+        <input
+          ref={importOverwriteInputRef}
+          type="file"
+          accept=".json"
+          style={{ display: "none" }}
+          onChange={(e) => handleImportMemos(e, 'overwrite')}
+        />
+        <input
+          ref={importAppendInputRef}
+          type="file"
+          accept=".json"
+          style={{ display: "none", marginRight: 0 }}
+          onChange={(e) => handleImportMemos(e, 'append')}
+        />
       </div>
 
       <Modal
@@ -244,7 +304,11 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
             </button>
             <button onClick={handleExportImage} className="modal-btn">
               <FontAwesomeIcon icon={faFileImage} />
-              导出渲染图
+              下载渲染图
+            </button>
+            <button onClick={handleExportJSON} className="modal-btn">
+              <FontAwesomeIcon icon={faFileDownload} />
+              导出全部备忘录
             </button>
           </div>
         </div>

@@ -354,6 +354,38 @@ body {
   pointer-events: none;
 }
 
+.toolbar-tag-input {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.import-btn {
+  width: calc( 50% - 10px );
+  padding: 8px 10px;
+  border-radius: calc( var(--border-radius) - 6px );
+  cursor: pointer;
+  border: none;
+  font-size: 14px;
+  background-color: var(--primary-color);
+  color: var(--editor-bg);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--box-shadow);
+  margin-right: 10px;
+}
+
+.import-btn:hover {
+  background-color: var(--primary-color-hover);
+  transform: scale(1.05);
+}
+
+.import-btn svg {
+  margin-right: 8px;
+}
+
 .toolbar-dropdown.open {
   opacity: 1;
   transform: translateY(0);

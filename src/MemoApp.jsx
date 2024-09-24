@@ -138,15 +138,17 @@ const MemoApp = () => {
             editorRef={editorRef}
           />
           <Toolbar
-            currentMemo={currentMemo || { title: "", content: "", tags: [] }}
-            setCurrentMemo={setCurrentMemo}
-            handleSave={handleSave}
-            isEditing={isEditing}
-            onToolbarAction={handleToolbarAction}
-            toast={toast}
-            canUndo={historyIndex > 0}
-            canRedo={historyIndex < memoHistory.length - 1}
-          />
+              currentMemo={currentMemo}
+              setCurrentMemo={setCurrentMemo}
+              handleSave={handleSave}
+              isEditing={isEditing}
+              onToolbarAction={handleToolbarAction}
+              toast={toast}
+              canUndo={historyIndex > 0}
+              canRedo={historyIndex < memoHistory.length - 1}
+              memos={memos}
+              setMemos={setMemos}
+            />
         </div>
       </div>
       <ToastContainer />
