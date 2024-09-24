@@ -208,7 +208,7 @@ body {
   overflow: hidden;
   margin-bottom: 16px;
   animation: editorEnter 0.6s ease-out 0.3s both,
-             editorResize 0.4s ease-in-out 0.7s;
+             editorResize 0.4s ease-in-out 0.8s;
   transition: background-color 0.6s var(--transition-timing),
               color 0.6s var(--transition-timing),
               box-shadow 0.6s var(--transition-timing);
