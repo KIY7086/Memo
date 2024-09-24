@@ -218,12 +218,24 @@ body {
 
 .tags-container {
   display: flex;
-  flex-wrap: wrap;
-  padding: 8px;
+  flex-wrap: nowrap;
+  padding: 6px;
   background-color: var(--toolbar-bg);
   height: 40px;
-  overflow-y: disable;
-  margin-bottom: 8.8px;
+  overflow-x: auto;
+  position: relative;
+}
+
+.timestamp {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-left: 1.6px solid var(--modal-header-border);
+  padding-left: 10px;
+  font-size: 0.9rem;
+  color: grey;
+  z-index: 100;
 }
 
 .tag {
@@ -234,6 +246,7 @@ body {
   border-radius: calc( var(--border-radius) - 6px );
   padding: 4px 8px;
   margin-right: 8px;
+  font-size: 13px;
 }
 
 .tag button {
@@ -313,6 +326,7 @@ body {
   border: 1px solid var(--primary-color);
   background-color: var(--bg-color);
   box-shadow: var(--box-shadow);
+  color: var(--text-color)
 }
 
 .toolbar-tag-input:focus input {

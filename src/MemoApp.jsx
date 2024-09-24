@@ -1,4 +1,3 @@
-import Modal from 'react-modal';
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import "./styles/style.css";
 
@@ -11,8 +10,6 @@ import { toast } from './components/Toast';
 import { useTheme, useMemoStorage } from "./hooks/index.js";
 import { getImage, saveImage } from './utils/indexedDB';
 import { v4 as uuidv4 } from 'uuid';
-
-Modal.setAppElement('#root');
 
 const MemoApp = () => {
   const { theme, handleThemeChange, getThemeIcon } = useTheme();
@@ -43,11 +40,11 @@ const MemoApp = () => {
   }, [currentMemo, saveMemo]);
 
   const handleNewMemo = () => {
-    const newMemo = createNewMemo();
-    setMemoHistory([newMemo]);
-    setHistoryIndex(0);
-    toast("新建备忘录成功", "success");
-  };
+      const newMemo = createNewMemo();
+      setMemoHistory([newMemo]);
+      setHistoryIndex(0);
+      toast("新建备忘录成功", "success");
+    };
 
   const handleToolbarAction = useCallback(async (action, value) => {
     if (!isEditing && action !== "share") {

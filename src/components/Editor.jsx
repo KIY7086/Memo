@@ -79,39 +79,41 @@ const Editor = ({ currentMemo, setCurrentMemo, isEditing, setIsEditing, editorRe
   };
 
   return (
-    <div className="editor-container" onClick={handleContainerClick}>
-      <div className="tags-container">
-        {currentMemo.tags.map((tag) => (
-          <div key={tag} className="tag">
-            #&nbsp;{tag}
-            <button onClick={() => handleTagRemove(tag)}>
-              <FontAwesomeIcon icon={faTimes} />
-            </button>
+      <div className="editor-container" onClick={handleContainerClick}>
+        <div className="tags-container">
+          <div className="tags-items">
+              {currentMemo.tags.map((tag) => (
+                <div key={tag} className="tag">
+                  #&nbsp;{tag}
+                  <button onClick={() => handleTagRemove(tag)}>
+                    <FontAwesomeIcon icon={faTimes} />
+                  </button>
+                </div>
+              ))}
           </div>
-        ))}
-      </div>
-      {isEditing ? (
-        <textarea
-          ref={editorRef}
-          className="editor-content"
-          value={currentMemo.content}
-          onChange={handleContentChange}
-        />
-      ) : (
-        <div 
-          className="editor-preview" 
-          onClick={handlePreviewClick}
-        >
-          <Markdown 
-            remarkPlugins={[remarkGfm, remarkMath]}
-            rehypePlugins={[rehypeRaw, rehypeKatex]}
-          >
-            {processedContent}
-          </Markdown>
+          <div className="timestamp">
+            <span>{new Date(currentMemo.id).toLocaleDateString()}</span>
+          </div>
         </div>
-      )}
-    </div>
-  );
+        {isEditing ? (
+          <textarea
+            ref={editorRef}
+            className="editor-content"
+            value={currentMemo.content}
+            onChange={handleContentChange}
+          />
+        ) : (
+          <div className="editor-preview" onClick={handlePreviewClick}>
+            <Markdown
+              remarkPlugins={[remarkGfm, remarkMath]}
+              rehypePlugins={[rehypeRaw, rehypeKatex]}
+            >
+              {processedContent}
+            </Markdown>
+          </div>
+        )}
+      </div>
+    );
 };
 
 export default Editor;
