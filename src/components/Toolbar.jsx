@@ -70,8 +70,7 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
     }
   };
 
-  const handleDownloadMarkdown = async () => {
-    let content = currentMemo.content;
+  const convertLocalImagesToBase64 = async (content) => {
     const localImageRegex = /!\[([^\]]*)\]\(local:([^)]+)\)/g;
     const matches = content.matchAll(localImageRegex);
 
@@ -84,9 +83,15 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
           reader.onload = (e) => resolve(e.target.result);
           reader.readAsDataURL(file);
         });
-        content = content.replace(fullMatch, `![${altText}](${base64})`);
+        content = content.replace(fullMatch, `![$${altText}](${base64})`);
       }
     }
+
+    return content;
+  };
+
+  const handleDownloadMarkdown = async () => {
+    const content = await convertLocalImagesToBase64(currentMemo.content);
 
     const element = document.createElement("a");
     const file = new Blob([content], {type: 'text/markdown'});
@@ -110,8 +115,13 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
     }
   };
 
-  const handleExportJSON = () => {
-    const dataStr = JSON.stringify(memos, null, 2);
+  const handleExportJSON = async () => {
+    const processedMemos = await Promise.all(memos.map(async (memo) => ({
+      ...memo,
+      content: await convertLocalImagesToBase64(memo.content)
+    })));
+
+    const dataStr = JSON.stringify(processedMemos, null, 2);
     const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
     const exportFileDefaultName = 'memos.json';
 
@@ -140,7 +150,7 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `${currentMemo.title}.png`;
+        link.download = `$${currentMemo.title}.png`;
         link.style.display = 'none';
         document.body.appendChild(link);
         link.click();
@@ -156,26 +166,31 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
     }
   };
 
-  const handleImportMemos = (event, mode) => {
+  const handleImportMemos = async (event, mode) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = async (e) => {
         try {
           const importedMemos = JSON.parse(e.target.result);
           if (Array.isArray(importedMemos)) {
+            const processedMemos = await Promise.all(importedMemos.map(async (memo) => {
+              const content = await processBase64Images(memo.content);
+              return { ...memo, content };
+            }));
+
             if (mode === 'overwrite') {
-              setMemos(importedMemos);
-              toast(`成功导入并覆盖 ${importedMemos.length} 个备忘录`, "success");
+              setMemos(processedMemos);
+              toast(`成功导入并覆盖 $${processedMemos.length} 个备忘录`, "success");
             } else if (mode === 'append') {
-              const newMemos = importedMemos.map(memo => ({
+              const newMemos = processedMemos.map(memo => ({
                 ...memo,
                 id: Date.now() + Math.random()
               }));
               setMemos(prevMemos => [...prevMemos, ...newMemos]);
               toast(`成功追加 ${newMemos.length} 个备忘录`, "success");
             }
-            handleSave(); // 自动保存导入的备忘录
+            handleSave();
           } else {
             throw new Error('Invalid JSON format');
           }
@@ -186,6 +201,22 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
       };
       reader.readAsText(file);
     }
+  };
+
+  const processBase64Images = async (content) => {
+    const base64ImageRegex = /!\[([^\]]*)\]\((data:image\/[^;]+;base64,[^)]+)\)/g;
+    const matches = content.matchAll(base64ImageRegex);
+
+    for (const match of matches) {
+      const [fullMatch, altText, base64Data] = match;
+      const imageId = uuidv4();
+      const response = await fetch(base64Data);
+      const blob = await response.blob();
+      await saveImage(imageId, blob);
+      content = content.replace(fullMatch, `![${altText}](local:${imageId})`);
+    }
+
+    return content;
   };
 
   const handleAddTag = () => {
@@ -232,7 +263,7 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
         />
       </div>
       <button className="save-btn" onClick={handleSave}>
-        <FontAwesomeIcon icon={faSave} /> &nbsp; 保存
+        <FontAwesomeIcon icon={faSave} style={{marginRight: "2px"}}/>   保存
       </button>
       <div className={`toolbar-dropdown ${isDropdownOpen ? 'open' : ''} ${isClosing ? 'closing' : ''}`}>
         <div className="toolbar-tag-input">
