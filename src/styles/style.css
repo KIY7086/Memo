@@ -319,7 +319,7 @@ body {
 	object-fit: contain;
 	display: block;
 	margin: 10px auto;
-	border-radius: var(--border-radius);
+	border-radius: calc( var(--border-radius) - 6px );
 	box-shadow: var(--box-shadow);
 }
 
