@@ -155,7 +155,7 @@ body {
 }
 
 .editor-container {
-  flex-grow: 1;
+  height: calc(100vh - 174px);
   border-radius: var(--size-border-radius);
   box-shadow: var(--shadow-box);
   overflow: hidden;
@@ -169,6 +169,9 @@ body {
   background-color: var(--color-toolbar);
   max-width: 100%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
 }
 
 .tags-container {
@@ -260,6 +263,8 @@ body {
   background-color: var(--color-editor);
   color: var(--color-text);
   transition: background-color 0.3s ease;
+  overflow-y: auto;
+  flex-grow: 1;
 }
 
 .editor-preview img {
