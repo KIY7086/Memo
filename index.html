@@ -15,6 +15,19 @@
   <body>
     <noscript>您需要启用 JavaScript 来运行这个应用。</noscript>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script>
+      function isMobile() {
+        return /Mobi|Android/i.test(navigator.userAgent);
+      }
+
+      if (window.innerHeight < window.innerWidth * 0.67 || !isMobile()) {
+        document.body.innerHTML = '<h1>非常抱歉，该网站只针对手机竖屏适配</h1>';
+      } else {
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.src = '/src/main.jsx';
+        document.body.appendChild(script);
+      }
+    </script>
   </body>
 </html>

@@ -249,19 +249,16 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
       >
         <FontAwesomeIcon icon={faCaretUp} />
       </button>
-      <div className="toolbar-buttons">
-        <ToolbarButton icon={faUndo} action="undo" label="撤销" disabled={!canUndo} />
-        <ToolbarButton icon={faRedo} action="redo" label="重做" disabled={!canRedo} />
-        <ToolbarButton icon={faImage} action="image" label="插入图片" />
-        <ToolbarButton icon={faShare} action="share" label="分享" />
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          style={{ display: "none" }}
-          onChange={handleFileUpload}
-        />
-      </div>
+      <ToolbarButton icon={faUndo} action="undo" label="撤销" disabled={!canUndo} />
+      <ToolbarButton icon={faRedo} action="redo" label="重做" disabled={!canRedo} />
+      <ToolbarButton icon={faImage} action="image" label="插入图片" />       <ToolbarButton icon={faShare} action="share" label="分享" />
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={handleFileUpload}
+      />
       <button className="save-btn" onClick={handleSave}>
         <FontAwesomeIcon icon={faSave} style={{marginRight: "2px"}}/>   保存
       </button>
@@ -275,11 +272,15 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
           />
           <button onClick={handleAddTag}>添加标签</button>
         </div>
-        <button onClick={() => handleToolbarClick("importOverwrite")} className="import-btn">
+        <button 
+          onClick={() => handleToolbarClick("importOverwrite")} 
+          className="import-btn overwrite">
           <FontAwesomeIcon icon={faFileImport} />
           导入（覆盖）
         </button>
-        <button onClick={() => handleToolbarClick("importAppend")} className="import-btn">
+        <button 
+          onClick={() => handleToolbarClick("importAppend")} 
+          className="import-btn append">
           <FontAwesomeIcon icon={faFileImport} />
           导入（追加）
         </button>
@@ -294,7 +295,7 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
           ref={importAppendInputRef}
           type="file"
           accept=".json"
-          style={{ display: "none", marginRight: 0 }}
+          style={{ display: "none"}}
           onChange={(e) => handleImportMemos(e, 'append')}
         />
       </div>

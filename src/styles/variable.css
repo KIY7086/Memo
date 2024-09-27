@@ -13,7 +13,7 @@
   --color-time: #808080;
   --color-toolbar: #faedcd;
   --color-toolbar-btn: #fefae0;
-  --color-toolbar-btn-hover: #f7e2c4;
+  --color-toolbar-btn-hover: #faf6e0;
   --color-toast: rgba(250, 237, 205, 0.9);
   --color-modal-header-border: rgba(212, 163, 115, 0.35);
   --color-info: #3498db;
@@ -22,8 +22,10 @@
   --color-error: #e74c3c;
 
   /* 尺寸 */
-  --size-sidebar: 250px;
-  --size-header-height: 70px;
+  --size-sidebar: 65vw;
+  --size-header-height: 18vw;
+  --size-editor-height: calc(100vh - 32px - 36vw);
+  --size-toolbar-height: 18vw;
   --size-border-radius: 18px;
   --size-toast-blur: 8px;
   --size-toast-border-radius: 12px;

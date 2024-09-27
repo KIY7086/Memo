@@ -155,7 +155,7 @@ body {
 }
 
 .editor-container {
-  height: var(--size-editor-height);
+  height: calc(100vh - 174px);
   border-radius: var(--size-border-radius);
   box-shadow: var(--shadow-box);
   overflow: hidden;
@@ -178,7 +178,7 @@ body {
   align-items: center;
   padding: 6px;
   background-color: var(--color-toolbar);
-  height: 10vw;
+  height: 40px;
   position: relative;
   width: calc(100vw - 36px);
 }
@@ -279,9 +279,7 @@ body {
 }
 
 .toolbar {
-  padding-left: 3.6vw;
-  padding-right: 3vw;
-  height: var(--size-toolbar-height);
+  padding: 16px;
   border-radius: var(--size-border-radius) var(--size-border-radius) 0 0;
   box-shadow: var(--shadow-box);
   display: flex;
@@ -338,18 +336,6 @@ body {
   transform: scale(1.05);
 }
 
-.import-btn {
-  width: calc( 50% - 5px );
-}
-
-.import-btn svg{
-  margin-right: 5px;
-}
-
-.import-btn.append {
-  margin-left: 10px;
-}
-
 .toolbar-dropdown {
   position: absolute;
   bottom: calc(100% + 8px);
@@ -376,13 +362,19 @@ body {
   animation: floatOut 0.3s cubic-bezier(0.25, 0.1, 0.25, 1.0) forwards;
 }
 
+.toolbar-buttons {
+  display: flex;
+  gap: 12px;
+}
+
 .toolbar-btn {
-  font-size: 4vw;
+  padding: 10px;
   border: none;
   border-radius: calc(var(--size-border-radius) - 6px);
   cursor: pointer;
-  width: 11vw;
-  height: 11vw;
+  width: 40px;
+  height: 40px;
+  font-size: 15px;
   background-color: var(--color-toolbar-btn);
   color: var(--color-text);
   transition: transform 0.2s ease-out,
@@ -408,9 +400,13 @@ body {
 }
 
 .save-btn {
-  padding: 0 3.6vw;
-  height: 11vw;
-  font-size: 3.8vw;
+  padding: 10px 16px;
+  height: 40px;
+  font-size: 15px;
+}
+
+.save-icon {
+  margin-right: 8px;
 }
 
 .title-wrapper {

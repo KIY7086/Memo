@@ -1,5 +1,6 @@
 # KIY7086/Memo
 一个由React.js构建的Web备忘录<br>
+**目前仅针对手机进行优化**
 
 ## 示例地址
 https://memo.kiy7086.com<br>
