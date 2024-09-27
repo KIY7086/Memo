@@ -11,12 +11,12 @@ https://memo.kiy7086.com<br>
 3.Markdown支持<br>
 4.原生HTML支持<br>
 5.备忘录Tag<br>
+6.备忘录数据导入&导出<br>
 
 ## 未来会支持的功能
-1.备忘录数据导出<br>
-2.设置面板<br>
-3.WebDav云同步<br>
-4.服务器加密云同步<br>
+1.设置面板<br>
+2.WebDav云同步<br>
+3.服务器加密云同步<br>
 
 ## 配置环境
 本项目依赖`Node.js`，确保你已经安装了Node.js<br>
