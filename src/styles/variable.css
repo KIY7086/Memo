@@ -1,0 +1,61 @@
+:root {
+  /* 颜色 */
+  --color-bg: #f5f3e8;
+  --color-text: #4a4a4a;
+  --color-primary: #d4a373;
+  --color-primary-hover: #e6b887;
+  --color-header: #faedcd;
+  --color-title: rgba(250, 237, 205, 0.6);
+  --color-title-border: rgba(212, 163, 115, 0.5);
+  --color-sidebar: rgba(250, 237, 205, 0.6);
+  --color-item-hover: #fefae0;
+  --color-editor: #ffffff;
+  --color-time: #808080;
+  --color-toolbar: #faedcd;
+  --color-toolbar-btn: #fefae0;
+  --color-toolbar-btn-hover: #f7e2c4;
+  --color-toast: rgba(250, 237, 205, 0.9);
+  --color-modal-header-border: rgba(212, 163, 115, 0.35);
+  --color-info: #3498db;
+  --color-success: #2ecc71;
+  --color-warning: #f39c12;
+  --color-error: #e74c3c;
+
+  /* 尺寸 */
+  --size-sidebar: 250px;
+  --size-header-height: 70px;
+  --size-border-radius: 18px;
+  --size-toast-blur: 8px;
+  --size-toast-border-radius: 12px;
+  --size-toast-margin: 12px;
+
+  /* 阴影 */
+  --shadow-box: 0 4px 10px rgba(212, 163, 115, 0.2);
+
+  /* 过渡 */
+  --transition-duration: 0.3s;
+  --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* 字体 */
+  --font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+[data-theme="dark"] {
+  --color-bg: #3c1f23;
+  --color-text: #e0e0e0;
+  --color-primary: #c18a70;
+  --color-primary-hover: #d6a088;
+  --color-header: #452429;
+  --color-title: rgba(69, 36, 41, 0.8);
+  --color-title-border: rgba(193, 138, 112, 0.4);
+  --color-sidebar: rgba(69, 36, 41, 0.8);
+  --color-item-hover: #532b31;
+  --color-editor: #32191d;
+  --color-time: #b0b0b0;
+  --color-toolbar: #452429;
+  --color-toolbar-btn: #361b1e;
+  --color-toolbar-btn-hover: #4a2b2f;
+  --color-toast: rgba(69, 36, 41, 0.95);
+  --color-modal-header-border: rgba(193, 138, 112, 0.35);
+  --shadow-box: 0 4px 10px rgba(0, 0, 0, 0.2);
+}

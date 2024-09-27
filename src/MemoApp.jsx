@@ -1,4 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
+import "./styles/variable.css";
+import "./styles/animation.css";
 import "./styles/style.css";
 
 import Header from "./components/Header";
