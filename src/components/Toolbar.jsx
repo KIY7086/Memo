@@ -10,19 +10,31 @@ import {
   faFileImage,
   faCaretUp,
   faFileExport,
-  faFileImport
+  faFileImport,
 } from "@fortawesome/free-solid-svg-icons";
-import html2canvas from 'html2canvas';
-import Modal from 'react-modal';
-import { v4 as uuidv4 } from 'uuid';
-import { saveImage, getImage } from '../utils/indexedDB';
+import html2canvas from "html2canvas";
+import Modal from "react-modal";
+import { v4 as uuidv4 } from "uuid";
+import { saveImage, getImage } from "../utils/indexedDB";
 
-const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbarAction, toast, canUndo, canRedo, memos, setMemos }) => {
+const Toolbar = ({
+  currentMemo,
+  setCurrentMemo,
+  handleSave,
+  isEditing,
+  onToolbarAction,
+  toast,
+  canUndo,
+  canRedo,
+  memos,
+  setMemos,
+}) => {
   const fileInputRef = useRef(null);
   const importOverwriteInputRef = useRef(null);
   const importAppendInputRef = useRef(null);
   const dropdownButtonRef = useRef(null);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [tag, setTag] = useState("");
@@ -31,7 +43,8 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
   useEffect(() => {
     if (dropdownButtonRef.current) {
       dropdownButtonRef.current.style.transform = `rotate(${rotation}deg)`;
-      dropdownButtonRef.current.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      dropdownButtonRef.current.style.transition =
+        "transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)";
     }
   }, [rotation]);
 
@@ -45,11 +58,17 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
     } else {
       setIsDropdownOpen(true);
     }
-    setRotation(prevRotation => prevRotation === 0 ? 180 : 0);
+    setRotation((prevRotation) => (prevRotation === 0 ? 180 : 0));
   };
 
   const handleToolbarClick = (action) => {
-    if (!isEditing && action !== "share" && action !== "exportAll" && action !== "importOverwrite" && action !== "importAppend") {
+    if (
+      !isEditing &&
+      action !== "share" &&
+      action !== "exportAll" &&
+      action !== "importOverwrite" &&
+      action !== "importAppend"
+    ) {
       toast("请先进入编辑模式", "warning");
       return;
     }
@@ -94,7 +113,7 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
     const content = await convertLocalImagesToBase64(currentMemo.content);
 
     const element = document.createElement("a");
-    const file = new Blob([content], {type: 'text/markdown'});
+    const file = new Blob([content], { type: "text/markdown" });
     element.href = URL.createObjectURL(file);
     element.download = `${currentMemo.title}.md`;
     document.body.appendChild(element);
@@ -116,18 +135,21 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
   };
 
   const handleExportJSON = async () => {
-    const processedMemos = await Promise.all(memos.map(async (memo) => ({
-      ...memo,
-      content: await convertLocalImagesToBase64(memo.content)
-    })));
+    const processedMemos = await Promise.all(
+      memos.map(async (memo) => ({
+        ...memo,
+        content: await convertLocalImagesToBase64(memo.content),
+      }))
+    );
 
     const dataStr = JSON.stringify(processedMemos, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    const exportFileDefaultName = 'memos.json';
+    const dataUri =
+      "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+    const exportFileDefaultName = "memos.json";
 
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
+    const linkElement = document.createElement("a");
+    linkElement.setAttribute("href", dataUri);
+    linkElement.setAttribute("download", exportFileDefaultName);
     linkElement.click();
     setIsShareModalOpen(false);
     toast("备忘录导出成功", "success");
@@ -135,33 +157,57 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
 
   const handleExportImage = async () => {
     try {
-      const previewElement = document.querySelector('.editor-preview');
+      setIsExporting(true);
+      const previewElement = document.querySelector(".editor-preview");
       if (!previewElement) {
-        throw new Error('Preview element not found');
+        throw new Error("预览元素不存在！");
       }
 
-      const canvas = await html2canvas(previewElement, {
-        scale: 2,
+      const container = document.createElement("div");
+      container.appendChild(previewElement.cloneNode(true));
+
+      container.style.position = "absolute";
+      container.style.left = "-9999999px";
+      container.style.top = "-9999999px";
+      document.body.appendChild(container);
+
+      const totalHeight = previewElement.scrollHeight;
+
+      container.style.width = `${previewElement.offsetWidth}px`;
+      container.style.height = `${totalHeight}px`;
+
+      const canvas = await html2canvas(container, {
+        scale: 4,
         useCORS: true,
-        backgroundColor: null
+        backgroundColor: null,
+        height: totalHeight,
+        windowHeight: totalHeight,
       });
 
-      canvas.toBlob((blob) => {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `$${currentMemo.title}.png`;
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
-      }, 'image/png', 1);
+      document.body.removeChild(container);
 
+      canvas.toBlob(
+        (blob) => {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = `${currentMemo.title}.png`;
+          link.style.display = "none";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        },
+        "image/png",
+        1
+      );
+
+      setIsExporting(false);
       setIsShareModalOpen(false);
       toast("预览图片导出成功", "success");
     } catch (error) {
       console.error("Error exporting image:", error);
+      setIsExporting(false);
       toast("导出图片失败", "error");
     }
   };
@@ -174,25 +220,30 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
         try {
           const importedMemos = JSON.parse(e.target.result);
           if (Array.isArray(importedMemos)) {
-            const processedMemos = await Promise.all(importedMemos.map(async (memo) => {
-              const content = await processBase64Images(memo.content);
-              return { ...memo, content };
-            }));
+            const processedMemos = await Promise.all(
+              importedMemos.map(async (memo) => {
+                const content = await processBase64Images(memo.content);
+                return { ...memo, content };
+              })
+            );
 
-            if (mode === 'overwrite') {
+            if (mode === "overwrite") {
               setMemos(processedMemos);
-              toast(`成功导入并覆盖 $${processedMemos.length} 个备忘录`, "success");
-            } else if (mode === 'append') {
-              const newMemos = processedMemos.map(memo => ({
+              toast(
+                `成功导入并覆盖 $${processedMemos.length} 个备忘录`,
+                "success"
+              );
+            } else if (mode === "append") {
+              const newMemos = processedMemos.map((memo) => ({
                 ...memo,
-                id: Date.now() + Math.random()
+                id: Date.now() + Math.random(),
               }));
-              setMemos(prevMemos => [...prevMemos, ...newMemos]);
+              setMemos((prevMemos) => [...prevMemos, ...newMemos]);
               toast(`成功追加 ${newMemos.length} 个备忘录`, "success");
             }
             handleSave();
           } else {
-            throw new Error('Invalid JSON format');
+            throw new Error("Invalid JSON format");
           }
         } catch (error) {
           console.error("Error importing memos:", error);
@@ -204,7 +255,8 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
   };
 
   const processBase64Images = async (content) => {
-    const base64ImageRegex = /!\[([^\]]*)\]\((data:image\/[^;]+;base64,[^)]+)\)/g;
+    const base64ImageRegex =
+      /!\[([^\]]*)\]\((data:image\/[^;]+;base64,[^)]+)\)/g;
     const matches = content.matchAll(base64ImageRegex);
 
     for (const match of matches) {
@@ -220,7 +272,7 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
   };
 
   const handleAddTag = () => {
-    if(tag && !currentMemo.tags.includes(tag)) {
+    if (tag && !currentMemo.tags.includes(tag)) {
       setCurrentMemo({ ...currentMemo, tags: [...currentMemo.tags, tag] });
       setTag("");
       toast("标签添加成功", "success");
@@ -230,9 +282,9 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
   };
 
   const ToolbarButton = ({ icon, action, label, disabled }) => (
-    <button 
-      onClick={() => handleToolbarClick(action)} 
-      className={`toolbar-btn ${disabled ? 'disabled' : ''}`} 
+    <button
+      onClick={() => handleToolbarClick(action)}
+      className={`toolbar-btn ${disabled ? "disabled" : ""}`}
       title={label}
       disabled={disabled}
     >
@@ -249,9 +301,20 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
       >
         <FontAwesomeIcon icon={faCaretUp} />
       </button>
-      <ToolbarButton icon={faUndo} action="undo" label="撤销" disabled={!canUndo} />
-      <ToolbarButton icon={faRedo} action="redo" label="重做" disabled={!canRedo} />
-      <ToolbarButton icon={faImage} action="image" label="插入图片" />       <ToolbarButton icon={faShare} action="share" label="分享" />
+      <ToolbarButton
+        icon={faUndo}
+        action="undo"
+        label="撤销"
+        disabled={!canUndo}
+      />
+      <ToolbarButton
+        icon={faRedo}
+        action="redo"
+        label="重做"
+        disabled={!canRedo}
+      />
+      <ToolbarButton icon={faImage} action="image" label="插入图片" />{" "}
+      <ToolbarButton icon={faShare} action="share" label="分享" />
       <input
         ref={fileInputRef}
         type="file"
@@ -260,27 +323,33 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
         onChange={handleFileUpload}
       />
       <button className="save-btn" onClick={handleSave}>
-        <FontAwesomeIcon icon={faSave} style={{marginRight: "2px"}}/>   保存
+        <FontAwesomeIcon icon={faSave} style={{ marginRight: "2px" }} /> 保存
       </button>
-      <div className={`toolbar-dropdown ${isDropdownOpen ? 'open' : ''} ${isClosing ? 'closing' : ''}`}>
+      <div
+        className={`toolbar-dropdown ${isDropdownOpen ? "open" : ""} ${
+          isClosing ? "closing" : ""
+        }`}
+      >
         <div className="toolbar-tag-input">
-          <input 
-            type="text" 
+          <input
+            type="text"
             value={tag}
             onChange={(e) => setTag(e.target.value)}
             placeholder="输入标签"
           />
           <button onClick={handleAddTag}>添加标签</button>
         </div>
-        <button 
-          onClick={() => handleToolbarClick("importOverwrite")} 
-          className="import-btn overwrite">
+        <button
+          onClick={() => handleToolbarClick("importOverwrite")}
+          className="import-btn overwrite"
+        >
           <FontAwesomeIcon icon={faFileImport} />
           导入（覆盖）
         </button>
-        <button 
-          onClick={() => handleToolbarClick("importAppend")} 
-          className="import-btn append">
+        <button
+          onClick={() => handleToolbarClick("importAppend")}
+          className="import-btn append"
+        >
           <FontAwesomeIcon icon={faFileImport} />
           导入（追加）
         </button>
@@ -289,38 +358,37 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
           type="file"
           accept=".json"
           style={{ display: "none" }}
-          onChange={(e) => handleImportMemos(e, 'overwrite')}
+          onChange={(e) => handleImportMemos(e, "overwrite")}
         />
         <input
           ref={importAppendInputRef}
           type="file"
           accept=".json"
-          style={{ display: "none"}}
-          onChange={(e) => handleImportMemos(e, 'append')}
+          style={{ display: "none" }}
+          onChange={(e) => handleImportMemos(e, "append")}
         />
       </div>
-
       <Modal
         isOpen={isShareModalOpen}
         onRequestClose={() => setIsShareModalOpen(false)}
         style={{
           overlay: {
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            backdropFilter: 'blur(5px)'
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backdropFilter: "blur(5px)",
           },
           content: {
-            top: '50%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            marginRight: '-50%',
-            transform: 'translate(-50%, -50%)',
-            padding: '0',
-            border: 'none',
-            background: 'none',
-            maxWidth: '400px',
-            width: '90%'
-          }
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            marginRight: "-50%",
+            transform: "translate(-50%, -50%)",
+            padding: "0",
+            border: "none",
+            background: "none",
+            maxWidth: "400px",
+            width: "90%",
+          },
         }}
         contentLabel="分享选项"
         closeTimeoutMS={300}
@@ -344,6 +412,41 @@ const Toolbar = ({ currentMemo, setCurrentMemo, handleSave, isEditing, onToolbar
             </button>
           </div>
         </div>
+      </Modal>
+      <Modal
+        isOpen={isExporting}
+        style={{
+          overlay: {
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            backdropFilter: "blur(5px)",
+          },
+          content: {
+            top: "50%",
+            left: "50%",
+            right: "auto",
+            bottom: "auto",
+            marginRight: "-50%",
+            transform: "translate(-50%, -50%)",
+            padding: "24px",
+            border: "none",
+            background: "var(--color-editor)",
+            borderRadius: "var(--size-border-radius)",
+            boxShadow: "var(--shadow-box)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            border: "3px solid var(--color-primary)",
+          },
+        }}
+        contentLabel="导出进度"
+      >
+        <div className="loading-spinner">
+          <div className="spinner-circle"></div>
+        </div>
+        <p style={{ marginTop: "20px", color: "var(--color-text)" }}>
+          正在导出图片，请稍候...
+        </p>
       </Modal>
     </div>
   );
