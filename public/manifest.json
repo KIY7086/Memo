@@ -1,6 +1,11 @@
 {
-  "short_name": "备忘录",
   "name": "React 备忘录应用",
+  "short_name": "备忘录",
+  "description": "一个简单的 PWA 备忘录应用",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f3e8",
+  "theme_color": "#faedcd",
   "icons": [
     {
       "src": "favicon.ico",
@@ -17,9 +22,5 @@
       "type": "image/png",
       "sizes": "512x512"
     }
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  ]
 }

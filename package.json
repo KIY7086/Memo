@@ -31,7 +31,8 @@
         "@types/react": "^18.2.15",
         "@types/react-dom": "^18.2.7",
         "@vitejs/plugin-react": "^4.0.3",
-        "vite": "^5.4.5"
+        "vite": "^5.4.5",
+        "vite-plugin-pwa": "^0.20.5"
     },
     "description": "一个由React.js构建的Web备忘录<br>",
     "main": "vite.config.js",

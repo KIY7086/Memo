@@ -31,6 +31,48 @@ const MemoApp = () => {
     }
   }, [currentMemo, isEditing]);
 
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js').then(registration => {
+          console.log('SW registered: ', registration);
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                toast("新版本可用，请刷新页面以更新", "info");
+              }
+            });
+          });
+        }).catch(registrationError => {
+          console.log('SW registration failed: ', registrationError);
+        });
+      });
+    }
+
+    const handleOnline = () => toast("网络连接已恢复", "success");
+    const handleOffline = () => toast("您当前处于离线状态", "warning");
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
+  useEffect(() => {
+    const updateThemeColor = (isDark) => {
+      const metaThemeColor = document.querySelector("meta[name=theme-color]");
+      if (metaThemeColor) {
+        metaThemeColor.setAttribute("content", isDark ? "#452429" : "#faedcd");
+      }
+    };
+
+    updateThemeColor(theme === 'dark');
+  }, [theme]);
+
   const handleSave = useCallback(() => {
     if (!currentMemo.title) {
       toast("标题不能为空", "error");
@@ -42,11 +84,11 @@ const MemoApp = () => {
   }, [currentMemo, saveMemo]);
 
   const handleNewMemo = () => {
-      const newMemo = createNewMemo();
-      setMemoHistory([newMemo]);
-      setHistoryIndex(0);
-      toast("新建备忘录成功", "success");
-    };
+    const newMemo = createNewMemo();
+    setMemoHistory([newMemo]);
+    setHistoryIndex(0);
+    toast("新建备忘录成功", "success");
+  };
 
   const handleToolbarAction = useCallback(async (action, value) => {
     if (!isEditing && action !== "share") {
@@ -137,17 +179,17 @@ const MemoApp = () => {
             editorRef={editorRef}
           />
           <Toolbar
-              currentMemo={currentMemo}
-              setCurrentMemo={setCurrentMemo}
-              handleSave={handleSave}
-              isEditing={isEditing}
-              onToolbarAction={handleToolbarAction}
-              toast={toast}
-              canUndo={historyIndex > 0}
-              canRedo={historyIndex < memoHistory.length - 1}
-              memos={memos}
-              setMemos={setMemos}
-            />
+            currentMemo={currentMemo}
+            setCurrentMemo={setCurrentMemo}
+            handleSave={handleSave}
+            isEditing={isEditing}
+            onToolbarAction={handleToolbarAction}
+            toast={toast}
+            canUndo={historyIndex > 0}
+            canRedo={historyIndex < memoHistory.length - 1}
+            memos={memos}
+            setMemos={setMemos}
+          />
         </div>
       </div>
       <ToastContainer />
