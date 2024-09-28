@@ -126,7 +126,7 @@ body {
   margin-bottom: 10px;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  text-overflow: clip;
   background-color: var(--color-bg);
   transition: background-color 0.3s ease,
               background-color 0.6s var(--transition-timing),
@@ -514,7 +514,7 @@ body {
 	border: none;
 	cursor: pointer;
 	text-align: left;
-	text-overflow: ellipsis;
+	text-overflow: clip;
 	white-space: nowrap;
 	overflow: hidden;
 	transition: transform 0.2s ease,
