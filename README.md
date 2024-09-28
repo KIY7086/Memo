@@ -12,6 +12,7 @@ https://memo.kiy7086.com<br>
 4.原生HTML支持<br>
 5.备忘录Tag<br>
 6.备忘录数据导入&导出<br>
+7.PWA应用完整支持<br>
 
 ## 未来会支持的功能
 1.设置面板<br>
