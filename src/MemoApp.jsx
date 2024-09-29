@@ -1,4 +1,7 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
+import Modal from "react-modal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMobileAlt } from "@fortawesome/free-solid-svg-icons";
 import "./styles/variable.css";
 import "./styles/animation.css";
 import "./styles/style.css";
@@ -30,6 +33,9 @@ const MemoApp = () => {
 
   const [memoHistory, setMemoHistory] = useState([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
+  const [isUnsupportedDevice, setIsUnsupportedDevice] = useState(false);
+
+  
 
   useEffect(() => {
     if (currentMemo && isEditing) {
@@ -170,6 +176,28 @@ const MemoApp = () => {
     },
     [isEditing, currentMemo, setCurrentMemo, memoHistory, historyIndex]
   );
+
+  if (isUnsupportedDevice) {
+    return (
+     <Modal
+        isOpen={true}
+        className="modal-content"
+        overlayClassName="modal-overlay"
+      >
+        <div className="modal-header">
+          <h2 className="modal-title">设备不支持</h2>
+        </div>
+        <div className="modal-body">
+          <FontAwesomeIcon icon={faMobileAlt} className="modal-icon" />
+          <p className="modal-message">
+            抱歉，此应用程序仅支持手机竖屏模式使用。
+            <br />
+            请使用手机并将其旋转至竖屏模式以访问应用。
+          </p>
+        </div>
+      </Modal>
+    );
+  }
 
   return (
     <div className="app-container">

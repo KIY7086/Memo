@@ -293,107 +293,88 @@ const Toolbar = ({
   );
 
   return (
-    <div className="toolbar">
-      <button
-        ref={dropdownButtonRef}
-        className="icon-btn"
-        onClick={toggleDropdown}
-      >
-        <FontAwesomeIcon icon={faCaretUp} />
-      </button>
-      <ToolbarButton
-        icon={faUndo}
-        action="undo"
-        label="撤销"
-        disabled={!canUndo}
-      />
-      <ToolbarButton
-        icon={faRedo}
-        action="redo"
-        label="重做"
-        disabled={!canRedo}
-      />
-      <ToolbarButton icon={faImage} action="image" label="插入图片" />{" "}
-      <ToolbarButton icon={faShare} action="share" label="分享" />
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        style={{ display: "none" }}
-        onChange={handleFileUpload}
-      />
-      <button className="save-btn" onClick={handleSave}>
-        <FontAwesomeIcon icon={faSave} style={{ marginRight: "2px" }} /> 保存
-      </button>
-      <div
-        className={`toolbar-dropdown ${isDropdownOpen ? "open" : ""} ${
-          isClosing ? "closing" : ""
-        }`}
-      >
-        <div className="toolbar-tag-input">
+      <div className="toolbar">
+        <button
+          ref={dropdownButtonRef}
+          className="icon-btn"
+          onClick={toggleDropdown}
+        >
+          <FontAwesomeIcon icon={faCaretUp} />
+        </button>
+        <ToolbarButton
+          icon={faUndo}
+          action="undo"
+          label="撤销"
+          disabled={!canUndo}
+        />
+        <ToolbarButton
+          icon={faRedo}
+          action="redo"
+          label="重做"
+          disabled={!canRedo}
+        />
+        <ToolbarButton icon={faImage} action="image" label="插入图片" />
+        <ToolbarButton icon={faShare} action="share" label="分享" />
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          style={{ display: "none" }}
+          onChange={handleFileUpload}
+        />
+        <button className="save-btn" onClick={handleSave}>
+          <FontAwesomeIcon icon={faSave} style={{ marginRight: "2px" }} /> 保存
+        </button>
+        <div
+          className={`toolbar-dropdown ${isDropdownOpen ? "open" : ""} ${
+            isClosing ? "closing" : ""
+          }`}
+        >
+          <div className="toolbar-tag-input">
+            <input
+              type="text"
+              value={tag}
+              onChange={(e) => setTag(e.target.value)}
+              placeholder="输入标签"
+            />
+            <button onClick={handleAddTag}>添加标签</button>
+          </div>
+          <button
+            onClick={() => handleToolbarClick("importOverwrite")}
+            className="import-btn overwrite"
+          >
+            <FontAwesomeIcon icon={faFileImport} />
+            导入（覆盖）
+          </button>
+          <button
+            onClick={() => handleToolbarClick("importAppend")}
+            className="import-btn append"
+          >
+            <FontAwesomeIcon icon={faFileImport} />
+            导入（追加）
+          </button>
           <input
-            type="text"
-            value={tag}
-            onChange={(e) => setTag(e.target.value)}
-            placeholder="输入标签"
+            ref={importOverwriteInputRef}
+            type="file"
+            accept=".json"
+            style={{ display: "none" }}
+            onChange={(e) => handleImportMemos(e, "overwrite")}
           />
-          <button onClick={handleAddTag}>添加标签</button>
+          <input
+            ref={importAppendInputRef}
+            type="file"
+            accept=".json"
+            style={{ display: "none" }}
+            onChange={(e) => handleImportMemos(e, "append")}
+          />
         </div>
-        <button
-          onClick={() => handleToolbarClick("importOverwrite")}
-          className="import-btn overwrite"
+        <Modal
+          isOpen={isShareModalOpen}
+          onRequestClose={() => setIsShareModalOpen(false)}
+          className="modal-content"
+          overlayClassName="modal-overlay"
+          closeTimeoutMS={300}
         >
-          <FontAwesomeIcon icon={faFileImport} />
-          导入（覆盖）
-        </button>
-        <button
-          onClick={() => handleToolbarClick("importAppend")}
-          className="import-btn append"
-        >
-          <FontAwesomeIcon icon={faFileImport} />
-          导入（追加）
-        </button>
-        <input
-          ref={importOverwriteInputRef}
-          type="file"
-          accept=".json"
-          style={{ display: "none" }}
-          onChange={(e) => handleImportMemos(e, "overwrite")}
-        />
-        <input
-          ref={importAppendInputRef}
-          type="file"
-          accept=".json"
-          style={{ display: "none" }}
-          onChange={(e) => handleImportMemos(e, "append")}
-        />
-      </div>
-      <Modal
-        isOpen={isShareModalOpen}
-        onRequestClose={() => setIsShareModalOpen(false)}
-        style={{
-          overlay: {
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            backdropFilter: "blur(5px)",
-          },
-          content: {
-            top: "50%",
-            left: "50%",
-            right: "auto",
-            bottom: "auto",
-            marginRight: "-50%",
-            transform: "translate(-50%, -50%)",
-            padding: "0",
-            border: "none",
-            background: "none",
-            maxWidth: "400px",
-            width: "90%",
-          },
-        }}
-        contentLabel="分享选项"
-        closeTimeoutMS={300}
-      >
-        <div className="modal-content">
           <div className="modal-header">
             <h2>选择分享方式</h2>
           </div>
@@ -411,45 +392,32 @@ const Toolbar = ({
               导出全部备忘录
             </button>
           </div>
-        </div>
-      </Modal>
-      <Modal
-        isOpen={isExporting}
-        style={{
-          overlay: {
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            backdropFilter: "blur(5px)",
-          },
-          content: {
-            top: "50%",
-            left: "50%",
-            right: "auto",
-            bottom: "auto",
-            marginRight: "-50%",
-            transform: "translate(-50%, -50%)",
-            padding: "24px",
-            border: "none",
-            background: "var(--color-editor)",
-            borderRadius: "var(--size-border-radius)",
-            boxShadow: "var(--shadow-box)",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            border: "3px solid var(--color-primary)",
-          },
-        }}
-        contentLabel="导出进度"
-      >
-        <div className="loading-spinner">
-          <div className="spinner-circle"></div>
-        </div>
-        <p style={{ marginTop: "20px", color: "var(--color-text)" }}>
-          正在导出图片，请稍候...
-        </p>
-      </Modal>
-    </div>
-  );
+        </Modal>
+        <Modal
+          isOpen={isExporting}
+          className="modal-content"
+          overlayClassName="modal-overlay"
+          contentLabel="导出进度"
+          style={{ 
+            content: {
+              width: "auto",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }
+          }}
+        >
+          <div>
+            <div className="loading-spinner">
+              <div className="spinner-circle"></div>
+            </div>
+            <p style={{ marginTop: "20px", color: "var(--color-text)" }}>
+              正在导出图片，请稍候...
+            </p>
+          </div>
+        </Modal>
+      </div>
+    );
 };
 
 export default Toolbar;

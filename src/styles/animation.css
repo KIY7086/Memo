@@ -104,18 +104,23 @@
 
 @keyframes breathe {
   0% {
-    transform: scale(1);
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
   }
   25% {
-    transform: scale(0.7);
+    transform: translateX(-50%) scale(0.7);
+    opacity: 0.4;
   }
   50% {
-    transform: scale(1);
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
   }
   75% {
-    transform: scale(0.7);
+    transform: translateX(-50%) scale(0.7);
+    opacity: 0.4;
   }
   100% {
-    transform: scale(1);
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
   }
 }

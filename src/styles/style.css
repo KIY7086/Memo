@@ -9,6 +9,29 @@
               opacity var(--transition-duration) var(--transition-timing);
 }
 
+* {
+  size-scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-track);
+}
+
+*::-webkit-scrollbar {
+  width: var(--size-scrollbar-width);
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--color-scrollbar-track);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-scrollbar-thumb);
+  border-radius: 20px;
+  border: 3px solid var(--color-scrollbar-track);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-scrollbar-thumb-hover);
+}
+
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
@@ -116,6 +139,11 @@ body {
   background-color: var(--color-sidebar);
   border-radius: 0 var(--size-border-radius) var(--size-border-radius) 0;
   overflow: hidden;
+  scrollbar-width: none;
+}
+
+.sidebar-content::-webkit-scrollbar {
+  display: none;
 }
 
 .memo-item {
@@ -189,9 +217,9 @@ body {
   flex-wrap: nowrap;
   overflow-x: auto;
   max-width: calc(100% - 90px);
-  scrollbar-width: thin;
+  size-scrollbar-width: thin;
   scrollbar-color: var(--color-primary) transparent;
-  scrollbar-width: none;
+  size-scrollbar-width: none;
 }
 
 .tags-items::-webkit-scrollbar {
@@ -264,6 +292,30 @@ body {
   transition: background-color 0.3s ease;
   overflow-y: auto;
   flex-grow: 1;
+  size-scrollbar-width: thin;
+  scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-track);
+}
+
+.editor-content::-webkit-scrollbar,
+.editor-preview::-webkit-scrollbar {
+  width: var(--size-scrollbar-width);
+}
+
+.editor-content::-webkit-scrollbar-track,
+.editor-preview::-webkit-scrollbar-track {
+  background: var(--color-scrollbar-track);
+}
+
+.editor-content::-webkit-scrollbar-thumb,
+.editor-preview::-webkit-scrollbar-thumb {
+  background-color: var(--color-scrollbar-thumb);
+  border-radius: 20px;
+  border: 3px solid var(--color-scrollbar-track);
+}
+
+.editor-content::-webkit-scrollbar-thumb:hover,
+.editor-preview::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-scrollbar-thumb-hover);
 }
 
 .editor-preview img {
@@ -386,8 +438,8 @@ body {
   border: none;
   border-radius: calc(var(--size-border-radius) - 6px);
   cursor: pointer;
-  width: 11vw;
-  height: 11vw;
+  width: var(--size-toolbar-btn);
+  height: var(--size-toolbar-btn);
   background-color: var(--color-toolbar-btn);
   color: var(--color-text);
   transition: transform 0.2s ease-out,
@@ -414,7 +466,7 @@ body {
 
 .save-btn {
   padding: 0 3.6vw;
-  height: 11vw;
+  height: var(--size-toolbar-btn);
   font-size: 3.8vw;
 }
 
@@ -502,6 +554,11 @@ body {
   height: 100%;
   overflow-y: auto;
   margin-bottom: 20px;
+  scrollbar-width: none;
+}
+
+.memo-list::-webkit-scrollbar {
+  display: none;
 }
 
 .new-memo-btn {
@@ -590,6 +647,21 @@ body {
   transform: scale(0.8);
 }
 
+/* src/styles/Modal.css */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .modal-content {
   color: var(--color-text);
   background-color: var(--color-editor);
@@ -597,6 +669,9 @@ body {
   padding: 24px;
   box-shadow: var(--shadow-box);
   border: 3px solid var(--color-primary);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
 }
 
 .modal-header {
@@ -626,6 +701,22 @@ body {
 
 .modal-btn svg {
   margin-right: 8px;
+}
+
+.modal-icon {
+  color: var(--color-primary);
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.modal-title {
+  color: var(--color-primary);
+  margin-bottom: 20px;
+}
+
+.modal-message {
+  color: var(--color-text);
+  margin-bottom: 20px;
 }
 
 .toast-container {
@@ -706,16 +797,18 @@ body {
 }
 
 .loading-spinner {
-  width: 50px;
+  width: 100%;
   height: 50px;
   position: relative;
 }
 
 .spinner-circle {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   background-color: var(--color-primary);
-  animation: breathe 2.2s ease-in-out infinite;
+  animation: breathe 2s ease-in-out infinite;
+  left: 50%;
+  transform: translateX(-50%);
 }
