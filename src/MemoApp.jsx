@@ -35,7 +35,22 @@ const MemoApp = () => {
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [isUnsupportedDevice, setIsUnsupportedDevice] = useState(false);
 
-  
+  useEffect(() => {
+    const checkDeviceOrientation = () => {
+      const isPortrait = window.innerHeight > window.innerWidth;
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      setIsUnsupportedDevice(!(isPortrait && isMobile));
+    };
+
+    checkDeviceOrientation();
+    window.addEventListener("resize", checkDeviceOrientation);
+    window.addEventListener("orientationchange", checkDeviceOrientation);
+
+    return () => {
+      window.removeEventListener("resize", checkDeviceOrientation);
+      window.removeEventListener("orientationchange", checkDeviceOrientation);
+    };
+  }, []);
 
   useEffect(() => {
     if (currentMemo && isEditing) {
