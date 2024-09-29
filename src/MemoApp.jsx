@@ -141,6 +141,22 @@ const MemoApp = () => {
     setHistoryIndex(0);
     toast("新建备忘录成功", "success");
   };
+  
+  const deleteMemo = useCallback((memoId) => {
+      setMemos((prevMemos) => prevMemos.filter((memo) => memo.id !== memoId));
+      if (currentMemo && currentMemo.id === memoId) {
+        const remainingMemos = memos.filter(memo => memo.id !== memoId);
+        if (remainingMemos.length > 0) {
+          setCurrentMemo(remainingMemos[0]);
+          localStorage.setItem("currentMemoId", remainingMemos[0].id.toString());
+        } else {
+          setCurrentMemo(null);
+          localStorage.removeItem("currentMemoId");
+        }
+      }
+      localStorage.setItem('memos', JSON.stringify(memos.filter(memo => memo.id !== memoId)));
+      toast("备忘录已删除", "success");
+    }, [memos, currentMemo, setMemos, setCurrentMemo]);
 
   const handleToolbarAction = useCallback(
     async (action, value) => {
@@ -250,6 +266,7 @@ const MemoApp = () => {
           isMenuOpen={isMenuOpen}
           setIsMenuOpen={setIsMenuOpen}
           handleNewMemo={handleNewMemo}
+          deleteMemo={deleteMemo}
         />
         <div className="main-content">
           <Editor
