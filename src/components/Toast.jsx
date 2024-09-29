@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ReactDOM from 'react-dom';
-import { Info, CheckCircle, Warning, Error, Close } from '@mui/icons-material';
+import { InfoRounded, CheckCircleRounded, WarningRounded, ErrorRounded, CloseRounded, RefreshRounded } from '@mui/icons-material';
 
 const icons = {
-  info: Info,
-  success: CheckCircle,
-  warning: Warning,
-  error: Error
+  info: InfoRounded,
+  success: CheckCircleRounded,
+  warning: WarningRounded,
+  error: ErrorRounded
 };
 
-const TOAST_DURATION = 3000; // 3 seconds
-const ANIMATION_DURATION = 500; // 0.5 seconds
+const TOAST_DURATION = 3000;
+const ANIMATION_DURATION = 500;
 
 const ToastContainer = () => {
   const [toasts, setToasts] = useState([]);
@@ -21,17 +21,15 @@ const ToastContainer = () => {
         toast.id === id ? { ...toast, isClosing: true } : toast
       )
     );
-
     setTimeout(() => {
       setToasts(prevToasts => prevToasts.filter(toast => toast.id !== id));
     }, ANIMATION_DURATION);
   }, []);
 
-  const addToast = useCallback((message, type = 'info') => {
+  const addToast = useCallback((message, type = 'info', duration = TOAST_DURATION, withRefresh = false) => {
     const id = Date.now();
-    const newToast = { id, message, type, isClosing: false, isNew: true };
+    const newToast = { id, message, type, isClosing: false, isNew: true, withRefresh };
     setToasts(prevToasts => [newToast, ...prevToasts]);
-
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         setToasts(prevToasts => 
@@ -41,8 +39,9 @@ const ToastContainer = () => {
         );
       });
     });
-
-    setTimeout(() => removeToast(id), TOAST_DURATION);
+    if (duration !== Infinity) {
+      setTimeout(() => removeToast(id), duration);
+    }
   }, [removeToast]);
 
   useEffect(() => {
@@ -67,7 +66,7 @@ const ToastContainer = () => {
   );
 };
 
-const Toast = ({ id, message, type, isClosing, isNew, index, onClose }) => {
+const Toast = ({ id, message, type, isClosing, isNew, index, onClose, withRefresh }) => {
   const Icon = icons[type] || icons.info;
 
   return (
@@ -75,18 +74,24 @@ const Toast = ({ id, message, type, isClosing, isNew, index, onClose }) => {
       className={`toast ${type} ${isClosing ? 'closing' : ''} ${isNew ? 'new' : ''}`}
       style={{ '--index': index }}
     >
-      <Icon className="toast-icon material-symbols-rounded" />
+      <Icon className="toast-icon" />
       <span className="toast-message">{message}</span>
-      <button className="toast-close" onClick={onClose}>
-        <Close fontSize="small" />
-      </button>
+      {withRefresh ? (
+        <button className="toast-refresh" onClick={() => window.location.reload()}>
+          <RefreshRounded className="refresh-icon" />
+        </button>
+      ) : (
+        <button className="toast-close" onClick={onClose}>
+          <CloseRounded className="close-icon" />
+        </button>
+      )}
     </div>
   );
 };
 
-export const toast = (message, type) => {
+export const toast = (message, type, duration = TOAST_DURATION, withRefresh = false) => {
   if (typeof window.addToast === 'function') {
-    window.addToast(message, type);
+    window.addToast(message, type, duration, withRefresh);
   }
 };
 

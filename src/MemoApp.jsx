@@ -64,19 +64,34 @@ const MemoApp = () => {
 
   useEffect(() => {
     if ("serviceWorker" in navigator) {
+      let refreshing = false;
+
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;
+        refreshing = true;
+        window.location.reload();
+      });
+
       window.addEventListener("load", () => {
         navigator.serviceWorker
           .register("/service-worker.js")
           .then((registration) => {
             console.log("SW registered: ", registration);
+
+            registration.update();
+            setInterval(() => {
+              registration.update();
+            }, 60 * 60 * 1000);
+
             registration.addEventListener("updatefound", () => {
               const newWorker = registration.installing;
               newWorker.addEventListener("statechange", () => {
-                if (
-                  newWorker.state === "installed" &&
-                  navigator.serviceWorker.controller
-                ) {
-                  toast("新版本可用，请刷新页面以更新", "info");
+                if (newWorker.state === "installed") {
+                  if (navigator.serviceWorker.controller) {
+                    toast("请刷新页面以应用更新", "info", Infinity, true);
+                  } else {
+                    console.log("首次安装 Service Worker");
+                  }
                 }
               });
             });
