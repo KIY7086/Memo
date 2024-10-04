@@ -17,6 +17,8 @@ import Modal from "react-modal";
 import { v4 as uuidv4 } from "uuid";
 import { saveImage, getImage } from "../utils/indexedDB";
 
+Modal.setAppElement('#root');
+
 const Toolbar = ({
   currentMemo,
   setCurrentMemo,

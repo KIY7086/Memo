@@ -16,6 +16,8 @@ import { useTheme, useMemoStorage } from "./hooks/index.js";
 import { getImage, saveImage } from "./utils/indexedDB";
 import { v4 as uuidv4 } from "uuid";
 
+Modal.setAppElement('#root');
+
 const MemoApp = () => {
   const { theme, handleThemeChange, getThemeIcon } = useTheme();
   const {
@@ -267,6 +269,7 @@ const MemoApp = () => {
           setIsMenuOpen={setIsMenuOpen}
           handleNewMemo={handleNewMemo}
           deleteMemo={deleteMemo}
+          theme={theme}
         />
         <div className="main-content">
           <Editor
