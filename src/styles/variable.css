@@ -22,6 +22,7 @@
   --color-scrollbar-track: var(--color-bg);
   --color-scrollbar-thumb: var(--color-primary);
   --color-scrollbar-thumb-hover: var(--color-primary-hover);
+  --color-empty: #c68648;
 
   --size-sidebar: 65vw;
   --size-header-height: 18vw;
@@ -62,6 +63,7 @@
     --color-scrollbar-track: #2a1518;
   --color-scrollbar-thumb: #8c6352;
   --color-scrollbar-thumb-hover: #a0735f;
+  --color-empty: #d18a69;
   
   --shadow-box: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
